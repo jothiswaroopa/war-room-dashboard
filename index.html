@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Swaroop · Empire Dashboard</title>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#f5a623"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="War Room 🔥"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07080a;--c1:#0f1012;--c2:#161719;--c3:#1e2022;--c4:#262829;
+  --fire:#f5a623;--ember:#e05c00;--earth:#4caf7d;--water:#4a9eff;--ash:#a78bfa;--rose:#f06292;
+  --fire2:rgba(245,166,35,0.1);--ember2:rgba(224,92,0,0.1);
+  --earth2:rgba(76,175,125,0.1);--water2:rgba(74,158,255,0.1);
+  --ash2:rgba(167,139,250,0.1);--rose2:rgba(240,98,146,0.1);
+  --red:#ef5350;--red2:rgba(239,83,80,0.1);
+  --t1:#edeae2;--t2:#9a968e;--t3:#55524c;
+  --bd:rgba(255,255,255,0.06);--bd2:rgba(255,255,255,0.12);
+  --r:12px;--rsm:8px;--rlg:18px;
+  --sans:'Plus Jakarta Sans',sans-serif;
+  --display:'Bebas Neue',cursive;
+  --mono:'JetBrains Mono',monospace;
+}
+html{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh}
+body{max-width:900px;margin:0 auto;padding:20px 16px 100px}
+
+/* ── HERO ── */
+.hero{position:relative;margin-bottom:32px;padding:28px 28px 24px;background:linear-gradient(135deg,rgba(245,166,35,.06) 0%,rgba(76,175,125,.04) 50%,rgba(74,158,255,.04) 100%);border:1px solid var(--bd2);border-radius:var(--rlg);overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(245,166,35,.12) 0%,transparent 70%);pointer-events:none}
+.hero-eye{font-family:var(--mono);font-size:10px;color:var(--fire);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
+.hero-name{font-family:var(--display);font-size:clamp(38px,9vw,64px);line-height:.92;letter-spacing:1px;background:linear-gradient(120deg,#edeae2 20%,var(--fire) 60%,var(--ember) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.hero-sub{font-family:var(--mono);font-size:11px;color:var(--t3);margin-bottom:18px}
+.hero-stats{display:flex;gap:20px;flex-wrap:wrap}
+.hs{text-align:center}
+.hs-n{font-family:var(--display);font-size:30px;line-height:1;color:var(--fire)}
+.hs-l{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:2px;letter-spacing:.06em}
+.hs-div{width:1px;background:var(--bd2);align-self:stretch}
+
+/* ── METRIC STRIP ── */
+.mstrip{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:24px}
+@media(min-width:560px){.mstrip{grid-template-columns:repeat(4,1fr)}}
+.mc{background:var(--c1);border:1px solid var(--bd);border-radius:var(--r);padding:16px 14px;position:relative;overflow:hidden}
+.mc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r) var(--r) 0 0}
+.mc.f::after{background:linear-gradient(90deg,var(--fire),var(--ember))}
+.mc.e::after{background:var(--earth)}
+.mc.w::after{background:var(--water)}
+.mc.a::after{background:var(--ash)}
+.mc-l{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.mc-v{font-family:var(--display);font-size:26px;color:var(--t1);line-height:1}
+.mc-s{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:3px}
+.bw{background:var(--c3);border-radius:20px;height:3px;margin-top:8px}
+.bar{height:3px;border-radius:20px;transition:width .5s}
+.bar.f{background:linear-gradient(90deg,var(--fire),var(--ember))}
+.bar.e{background:var(--earth)}.bar.w{background:var(--water)}.bar.a{background:var(--ash)}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--bd);margin-bottom:24px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-family:var(--mono);font-size:10px;color:var(--t3);padding:11px 16px;cursor:pointer;border:none;background:none;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;letter-spacing:.04em}
+.tab.active{color:var(--fire);border-bottom-color:var(--fire)}
+.tab:hover:not(.active){color:var(--t2)}
+.view{display:none}.view.active{display:block}
+
+/* ── COMMON ── */
+.card{background:var(--c1);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px;margin-bottom:12px}
+.sec{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+hr{border:none;border-top:1px solid var(--bd);margin:18px 0}
+.badge{font-family:var(--mono);font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap;display:inline-block}
+.bf{background:var(--fire2);color:var(--fire)}.be{background:var(--earth2);color:var(--earth)}
+.bw2{background:var(--water2);color:var(--water)}.ba{background:var(--ash2);color:var(--ash)}
+.br{background:var(--red2);color:var(--red)}.bem{background:var(--ember2);color:var(--ember)}
+.bro{background:var(--rose2);color:var(--rose)}
+
+/* ── COMMAND TAB ── */
+.mot{background:linear-gradient(135deg,rgba(245,166,35,.07),rgba(76,175,125,.05));border:1px solid rgba(245,166,35,.2);border-radius:var(--rlg);padding:20px 22px;margin-bottom:20px}
+.mot-t{font-family:var(--display);font-size:clamp(14px,4vw,19px);color:var(--t1);letter-spacing:.5px;margin-bottom:6px}
+.mot-s{font-family:var(--mono);font-size:10px;color:var(--t3);line-height:1.8}
+
+.daily-row{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--bd)}
+.daily-row:last-child{border-bottom:none}
+.d-chk{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:13px;color:var(--t3);user-select:none;transition:all .2s}
+.d-chk.on{background:linear-gradient(135deg,var(--fire),var(--ember));border-color:transparent;color:#07080a;box-shadow:0 0 14px rgba(245,166,35,.25)}
+.d-lbl{font-size:13px;color:var(--t1);font-weight:600}
+.d-note{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:2px}
+
+.p-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+@media(min-width:540px){.p-grid{grid-template-columns:repeat(4,1fr)}}
+.pcard{background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 12px}
+.pico{font-size:18px;margin-bottom:8px}
+.pname{font-family:var(--mono);font-size:10px;color:var(--t2);font-weight:600}
+.ptgt{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:2px}
+.pnum{font-family:var(--display);font-size:34px;color:var(--t1);line-height:1;margin:6px 0}
+.pbtns{display:flex;gap:5px}
+.pb{width:28px;height:28px;border-radius:6px;border:none;cursor:pointer;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--mono)}
+.pb.pl{background:var(--fire);color:#07080a}.pb.pl:hover{background:var(--ember)}
+.pb.pm{background:var(--c3);border:1px solid var(--bd2);color:var(--t2)}
+
+.fc-btns{display:flex;gap:4px;justify-content:center;margin-top:8px}
+.fcb{width:26px;height:26px;border-radius:6px;border:none;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--mono);transition:all .15s;line-height:1}
+.fcb.plus{background:var(--fire);color:#07080a}.fcb.plus:hover{background:var(--ember)}
+.fcb.minus{background:var(--c4);border:1px solid var(--bd2);color:var(--t2)}.fcb.minus:hover{background:var(--c3);color:var(--t1)}
+.resetbtn{width:100%;background:none;border:1px dashed var(--bd2);border-radius:var(--rsm);font-family:var(--mono);font-size:10px;color:var(--t3);padding:9px;cursor:pointer;margin-top:8px;transition:all .15s;letter-spacing:.04em}
+.resetbtn:hover{border-color:var(--red);color:var(--red)}
+.fc{flex:1;min-width:68px;background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 10px;text-align:center}
+.fnum{font-family:var(--display);font-size:30px;line-height:1}
+.flbl{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:4px;letter-spacing:.04em}
+.farr{display:flex;align-items:center;color:var(--t3);font-size:18px;padding:0 2px;align-self:center}
+@media(max-width:480px){.farr{display:none}}
+.fbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.fbtn{background:var(--c2);border:1px dashed var(--bd2);border-radius:var(--rsm);font-family:var(--mono);font-size:11px;color:var(--t2);padding:10px;cursor:pointer;transition:all .15s;text-align:center}
+.fbtn:hover{border-color:var(--fire);color:var(--fire)}
+.closebtn{width:100%;background:linear-gradient(135deg,rgba(245,166,35,.14),rgba(224,92,0,.14));border:1px solid var(--fire);border-radius:var(--rsm);font-family:var(--display);font-size:20px;color:var(--fire);padding:13px;cursor:pointer;letter-spacing:1px;transition:all .2s}
+.closebtn:hover{box-shadow:0 0 24px rgba(245,166,35,.2)}
+
+.sched{display:flex;flex-direction:column;gap:8px}
+.sblock{display:flex;align-items:flex-start;gap:14px;background:var(--c2);border-radius:var(--rsm);padding:12px 14px;border-left:3px solid var(--bd2)}
+.stime{font-family:var(--display);font-size:20px;color:var(--fire);line-height:1;white-space:nowrap;min-width:70px}
+.stime.personal{color:var(--earth)}
+.sact{font-size:13px;color:var(--t1);line-height:1.5;font-weight:500}
+.sdur{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:3px}
+.sblock.sl-f{border-left-color:var(--fire)}
+.sblock.sl-e{border-left-color:var(--earth)}
+.sblock.sl-w{border-left-color:var(--water)}
+.sblock.sl-a{border-left-color:var(--ash)}
+.sblock.sl-p{border-left-color:var(--earth);background:rgba(76,175,125,.05)}
+
+.scbox{background:var(--c2);border:1px solid var(--bd);border-left:3px solid var(--earth);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.sc-l{font-family:var(--mono);font-size:9px;color:var(--earth);font-weight:600;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase}
+.sc-t{font-size:12px;color:var(--t2);line-height:1.9}
+
+/* ── ROADMAP TAB ── */
+.phase-card{border:1px solid var(--bd);border-radius:var(--rlg);padding:20px;margin-bottom:12px;position:relative;overflow:hidden}
+.phase-card.active-phase{border-color:rgba(245,166,35,.3);background:linear-gradient(135deg,rgba(245,166,35,.04),transparent)}
+.phase-num{font-family:var(--display);font-size:60px;color:rgba(255,255,255,.03);position:absolute;top:-4px;right:16px;line-height:1;pointer-events:none}
+.phase-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.phase-title{font-size:15px;font-weight:800;color:var(--t1)}
+.phase-months{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:3px}
+.phase-target{font-family:var(--display);font-size:22px;color:var(--fire);white-space:nowrap}
+.phase-tasks{display:flex;flex-direction:column;gap:6px}
+.pt{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--t2);padding:4px 0}
+.pdot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.pdot.f{background:var(--fire)}.pdot.e{background:var(--earth)}.pdot.w{background:var(--water)}.pdot.a{background:var(--ash)}
+.phase-rev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bd)}
+.prv{background:var(--c3);border-radius:var(--rsm);padding:10px;text-align:center}
+.prv-n{font-family:var(--display);font-size:18px;color:var(--t1);line-height:1}
+.prv-l{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:3px}
+
+/* ── REVENUE STREAMS TAB ── */
+.rs-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:16px}
+@media(min-width:600px){.rs-grid{grid-template-columns:repeat(2,1fr)}}
+.rs-card{background:var(--c1);border:1px solid var(--bd);border-radius:var(--r);padding:18px;position:relative;overflow:hidden}
+.rs-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0}
+.rs-card.c1::before{background:linear-gradient(90deg,var(--fire),var(--ember))}
+.rs-card.c2::before{background:var(--water)}
+.rs-card.c3::before{background:var(--earth)}
+.rs-card.c4::before{background:var(--ash)}
+.rs-card.c5::before{background:var(--rose)}
+.rs-card.c6::before{background:#ffd54f}
+.rs-ico{font-size:24px;margin-bottom:10px}
+.rs-name{font-size:14px;font-weight:700;color:var(--t1)}
+.rs-type{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:12px}
+.rs-target{font-family:var(--display);font-size:20px;color:var(--fire);margin-bottom:8px}
+.rs-month{font-family:var(--mono);font-size:9px;color:var(--t3);margin-bottom:10px}
+.rs-current{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.rs-cur-lbl{font-family:var(--mono);font-size:9px;color:var(--t3)}
+.rs-cur-val{font-family:var(--mono);font-size:12px;color:var(--t1);font-weight:600}
+.rs-input{font-family:var(--mono);font-size:13px;border:none;border-bottom:1px solid var(--bd2);background:none;color:var(--t1);width:100%;padding:4px 0;outline:none;margin-top:6px}
+.rs-input::placeholder{color:var(--t3)}
+
+.total-card{background:linear-gradient(135deg,rgba(245,166,35,.08),rgba(76,175,125,.06));border:1px solid rgba(245,166,35,.25);border-radius:var(--rlg);padding:22px;margin-bottom:16px;text-align:center}
+.total-lbl{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.1em;margin-bottom:8px}
+.total-val{font-family:var(--display);font-size:48px;line-height:1;background:linear-gradient(120deg,var(--fire),var(--ember));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.total-sub{font-family:var(--mono);font-size:10px;color:var(--earth);margin-top:6px}
+.total-prog{background:var(--c3);border-radius:20px;height:6px;margin-top:14px}
+.total-bar{height:6px;border-radius:20px;background:linear-gradient(90deg,var(--earth),var(--fire));transition:width .5s}
+
+/* ── PIPELINE TAB ── */
+.cl{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.cl:last-child{border-bottom:none}
+.cl-in{font-size:13px;color:var(--t1);background:none;border:none;outline:none;font-family:var(--sans);flex:1;min-width:80px;font-weight:600}
+.cl-in::placeholder{color:var(--t3)}
+.sel{font-family:var(--mono);font-size:10px;border:1px solid var(--bd2);border-radius:6px;padding:4px 7px;background:var(--c3);color:var(--t1);cursor:pointer}
+.sp{font-family:var(--mono);font-size:10px;font-weight:600;padding:5px 10px;border-radius:20px;cursor:pointer;white-space:nowrap;user-select:none}
+.s-p{background:var(--fire2);color:var(--fire)}.s-c{background:var(--water2);color:var(--water)}
+.s-x{background:var(--earth2);color:var(--earth)}.s-l{background:var(--red2);color:var(--red)}
+.rv{font-family:var(--mono);font-size:12px;border:none;border-bottom:1px solid var(--bd2);background:none;color:var(--t1);width:75px;padding:2px 0;outline:none;text-align:right}
+.delbtn{background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;flex-shrink:0}
+.delbtn:hover{color:var(--red)}
+.addbtn{background:none;border:1px dashed var(--bd2);border-radius:var(--rsm);font-family:var(--mono);font-size:11px;color:var(--t3);cursor:pointer;padding:8px 16px;margin-top:6px;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.addbtn:hover{border-color:var(--fire);color:var(--fire)}
+
+/* ── AI AGENTS TAB ── */
+.agent-card{background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;margin-bottom:10px;position:relative}
+.agent-card.live{border-color:rgba(76,175,125,.3);background:rgba(76,175,125,.04)}
+.agent-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px}
+.agent-name{font-size:14px;font-weight:700;color:var(--t1)}
+.agent-tech{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:2px}
+.agent-price{text-align:right}
+.agent-setup{font-family:var(--mono);font-size:10px;color:var(--t3)}
+.agent-monthly{font-family:var(--display);font-size:20px;color:var(--earth)}
+.agent-bul{font-size:12px;color:var(--t2);line-height:1.9;margin-bottom:10px}
+.agent-progress{display:flex;align-items:center;gap:10px}
+.agent-sales-lbl{font-family:var(--mono);font-size:9px;color:var(--t3)}
+.agent-sales-in{font-family:var(--mono);font-size:12px;border:none;border-bottom:1px solid var(--bd2);background:none;color:var(--t1);width:36px;padding:2px 0;outline:none;text-align:center}
+.agent-sales-max{font-family:var(--mono);font-size:12px;color:var(--t3)}
+.agent-bar-w{flex:1;background:var(--c4);border-radius:20px;height:4px}
+.agent-bar{height:4px;border-radius:20px;background:var(--earth);transition:width .3s}
+
+/* ── BRAND TAB ── */
+.brand-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+@media(min-width:500px){.brand-grid{grid-template-columns:repeat(4,1fr)}}
+.brand-card{background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:14px}
+.brand-ico{font-size:20px;margin-bottom:8px}
+.brand-plat{font-family:var(--mono);font-size:10px;color:var(--t2);font-weight:600}
+.brand-count{font-family:var(--display);font-size:28px;color:var(--t1);line-height:1;margin:6px 0}
+.brand-in{font-family:var(--mono);font-size:12px;border:none;border-bottom:1px solid var(--bd2);background:none;color:var(--t1);width:80px;padding:2px 0;outline:none}
+.brand-goal{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:4px}
+
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:12px}
+.tool-card{background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:12px;display:flex;align-items:center;gap:10px}
+.tool-ico{font-size:18px;flex-shrink:0}
+.tool-name{font-size:12px;font-weight:600;color:var(--t1)}
+.tool-use{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:2px}
+.tool-check{margin-left:auto;width:18px;height:18px;border-radius:50%;border:1px solid var(--bd2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;user-select:none;transition:all .15s}
+.tool-check.on{background:var(--earth);border-color:var(--earth);color:#07080a}
+
+/* ── TASKS ── */
+.task-block{margin-bottom:4px}
+.task{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.task:last-child{border-bottom:none}
+.task input[type=checkbox]{margin-top:3px;flex-shrink:0;width:14px;height:14px;cursor:pointer;accent-color:var(--fire)}
+.tm{font-size:13px;color:var(--t1);line-height:1.5;font-weight:500}
+.tm.done{text-decoration:line-through;color:var(--t3);font-weight:400}
+.tn{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:3px}
+.ttag{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:4px;margin-right:4px;margin-bottom:4px}
+.ti{background:var(--water2);color:var(--water)}.td{background:var(--fire2);color:var(--fire)}.tb{background:var(--earth2);color:var(--earth)}.tag{background:var(--ash2);color:var(--ash)}
+
+/* ── OFFERS ── */
+.offer{background:var(--c1);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px;margin-bottom:10px}
+.offer.hot{border-color:rgba(245,166,35,.35);background:linear-gradient(135deg,rgba(245,166,35,.04),rgba(224,92,0,.02))}
+.offer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px}
+.offer-name{font-size:14px;font-weight:700;color:var(--t1)}
+.offer-type{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:2px}
+.offer-prices{text-align:right;flex-shrink:0}
+.offer-inr{font-family:var(--mono);font-size:10px;color:var(--t3)}
+.offer-usd{font-family:var(--display);font-size:22px;color:var(--fire)}
+.offer-bul{font-size:12px;color:var(--t2);line-height:2}
+.kill{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd);font-size:12px;color:var(--t2)}
+.kill:last-child{border-bottom:none}
+.ki{color:var(--ember);flex-shrink:0;font-size:14px}
+.rev-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bd);font-size:12px;color:var(--t2)}
+.rev-row:last-child{border-bottom:none;font-weight:700;font-size:13px;color:var(--t1)}
+.rev-row span:last-child{font-family:var(--mono)}
+input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
+
+/* ── REALITY CHECK ── */
+.rc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.rc-card{border-radius:var(--r);padding:16px;border:1px solid var(--bd)}
+.rc-card.honest{background:rgba(76,175,125,.06);border-color:rgba(76,175,125,.25)}
+.rc-card.warn{background:rgba(239,83,80,.06);border-color:rgba(239,83,80,.2)}
+.rc-card.stretch{background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.2)}
+.rc-title{font-family:var(--display);font-size:15px;letter-spacing:.5px;margin-bottom:6px}
+.rc-num{font-family:var(--display);font-size:32px;line-height:1;margin-bottom:4px}
+.rc-sub{font-family:var(--mono);font-size:10px;color:var(--t3);line-height:1.7}
+.rc-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:12px;color:var(--t2);align-items:flex-start}
+.rc-row:last-child{border-bottom:none}
+.rc-ico{flex-shrink:0;font-size:14px}
+
+/* ── TIMELINE ── */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-block{display:flex;gap:0;position:relative}
+.tl-block:last-child .tl-line{display:none}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:56px;flex-shrink:0}
+.tl-time{font-family:var(--display);font-size:14px;color:var(--fire);line-height:1;white-space:nowrap}
+.tl-time.personal{color:var(--earth)}
+.tl-time.off{color:var(--t3)}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin:4px 0}
+.tl-line{width:1px;flex:1;min-height:20px;margin:0 auto;opacity:.25}
+.tl-right{flex:1;padding:0 0 20px 14px}
+.tl-card{background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px}
+.tl-card.personal-card{background:rgba(76,175,125,.05);border-color:rgba(76,175,125,.2)}
+.tl-card.off-card{background:var(--c1);border-color:var(--bd)}
+.tl-label{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:3px}
+.tl-label.personal{color:var(--earth)}
+.tl-label.off{color:var(--t3)}
+.tl-desc{font-size:12px;color:var(--t2);line-height:1.6}
+.tl-dur{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:4px}
+.tl-why{font-family:var(--mono);font-size:10px;margin-top:5px;padding:4px 8px;border-radius:4px;background:rgba(245,166,35,.08);color:var(--fire);border-left:2px solid var(--fire)}
+
+/* ── WEEKLY GRID ── */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
+.day-col{background:var(--c2);border:1px solid var(--bd);border-radius:var(--rsm);padding:8px 6px;text-align:center}
+.day-col.rest{background:rgba(76,175,125,.05);border-color:rgba(76,175,125,.15)}
+.day-name{font-family:var(--mono);font-size:9px;color:var(--t3);margin-bottom:6px;font-weight:600}
+.day-focus{font-size:10px;color:var(--t2);line-height:1.5}
+.day-hours{font-family:var(--display);font-size:18px;margin-top:4px}
+.day-hours.fire{color:var(--fire)}
+.day-hours.earth{color:var(--earth)}
+.day-hours.gray{color:var(--t3)}
+
+/* ── HABIT TRACKER ── */
+.habit-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.habit-row:last-child{border-bottom:none}
+.habit-label{font-size:12px;font-weight:600;color:var(--t1);flex:1;min-width:0}
+.habit-note{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:2px}
+.streak-num{font-family:var(--display);font-size:22px;color:var(--fire);white-space:nowrap;min-width:40px;text-align:right}
+.streak-fire{font-size:14px}
+.habit-dots{display:flex;gap:4px;flex-wrap:wrap}
+.hdot{width:18px;height:18px;border-radius:50%;background:var(--c3);border:1px solid var(--bd2);cursor:pointer;transition:all .15s;flex-shrink:0}
+.hdot.on{background:var(--fire);border-color:var(--fire)}
+.hdot.on.e{background:var(--earth);border-color:var(--earth)}
+
+/* ── MONTH FOCUS ── */
+.mf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.mf-card{background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:14px}
+.mf-months{font-family:var(--mono);font-size:10px;font-weight:600;margin-bottom:6px}
+.mf-focus{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:8px}
+.mf-item{font-size:11px;color:var(--t2);padding:3px 0;border-bottom:1px solid var(--bd);display:flex;gap:6px}
+.mf-item:last-child{border-bottom:none}
+.mf-dot{flex-shrink:0;margin-top:5px;width:4px;height:4px;border-radius:50%}
+
+/* ── MILESTONE STRIP ── */
+.milestone-strip{display:flex;align-items:center;gap:6px;background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;flex-wrap:wrap;margin-bottom:16px}
+.ms-item{text-align:center;flex:1;min-width:58px}
+.ms-item.active-ms{background:var(--fire2);border-radius:var(--rsm);padding:6px 8px}
+.ms-num{font-family:var(--display);font-size:20px;color:var(--t3);line-height:1}
+.ms-lbl{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:2px}
+.ms-pct{font-family:var(--mono);font-size:11px;color:var(--fire);margin-top:3px;font-weight:600}
+.ms-arrow{color:var(--t3);font-size:16px;flex-shrink:0}
+
+/* ── SERVICES TAB ── */
+.svc-goal{background:linear-gradient(135deg,rgba(245,166,35,.08),rgba(224,92,0,.05));border:1px solid rgba(245,166,35,.25);border-radius:var(--rlg);padding:20px 22px;margin-bottom:20px;text-align:center}
+.svc-goal-lbl{font-family:var(--mono);font-size:10px;color:var(--fire);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+.svc-goal-num{font-family:var(--display);font-size:52px;background:linear-gradient(120deg,var(--fire),var(--ember));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:8px}
+.svc-goal-path{font-family:var(--mono);font-size:10px;color:var(--t3);line-height:1.8}
+.svc-card{background:var(--c1);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px;margin-bottom:12px}
+.svc-card.hot{border-color:rgba(245,166,35,.3);background:linear-gradient(135deg,rgba(245,166,35,.04),rgba(224,92,0,.02))}
+.svc-hot-tag{font-family:var(--mono);font-size:10px;background:var(--fire2);color:var(--fire);padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:12px;font-weight:600;letter-spacing:.04em}
+.svc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.svc-num{font-family:var(--display);font-size:34px;color:var(--t3);line-height:1;margin-bottom:2px}
+.svc-name{font-size:15px;font-weight:700;color:var(--t1)}
+.svc-type{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:3px}
+.svc-price-wrap{text-align:right;flex-shrink:0}
+.svc-inr{font-family:var(--display);font-size:20px;color:var(--fire)}
+.svc-usd{font-family:var(--mono);font-size:11px;color:var(--t3);margin-top:4px}
+.svc-body{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.svc-body{grid-template-columns:1fr}}
+.svc-col-title{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+.svc-item{font-size:12px;color:var(--t2);padding:5px 0;border-bottom:1px solid var(--bd);line-height:1.5}
+.svc-item:last-child{border-bottom:none}
+.svc-rule{font-family:var(--mono);font-size:10px;color:var(--fire);margin-top:8px;padding:5px 8px;background:var(--fire2);border-radius:4px;border-left:2px solid var(--fire)}
+
+/* ── TARGET GRID ── */
+.target-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px}
+.tgt-card{background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px}
+.tgt-rank{font-size:14px;margin-bottom:6px}
+.tgt-name{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.tgt-why{font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:8px}
+.tgt-result{font-family:var(--mono);font-size:10px;color:var(--earth);margin-bottom:4px}
+.tgt-budget{font-family:var(--mono);font-size:10px;color:var(--t3);margin-bottom:8px}
+.tgt-retention{font-family:var(--mono);font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;display:inline-block}
+
+/* ── SERVICES NEW ── */
+.mkt-banner{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:8px;background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:16px}
+@media(max-width:560px){.mkt-banner{grid-template-columns:1fr;text-align:center}}
+.mkt-col{text-align:center}.mkt-col.you{background:var(--fire2);border-radius:var(--rsm);padding:8px}
+.mkt-label{font-family:var(--mono);font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.mkt-price{font-family:var(--display);font-size:18px;color:var(--t2);line-height:1;margin-bottom:4px}
+.mkt-note{font-family:var(--mono);font-size:9px;color:var(--t3);line-height:1.5}
+.mkt-arrow{color:var(--t3);font-size:18px;text-align:center}
+.cost-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd);font-size:11px}
+.cost-row:last-child{border-bottom:none}
+.cost-row.bdr{border-bottom:1px solid var(--bd2);margin-bottom:4px;padding-bottom:6px}
+.cost-lbl{color:var(--t2);font-family:var(--mono)}
+.cost-val{font-family:var(--mono);font-weight:600}
+.cost-val.red{color:var(--red)}
+.cost-val.grn{color:var(--earth)}
+.margin-bar-wrap{display:flex;align-items:center;gap:8px;margin-top:6px}
+.margin-bar{height:4px;border-radius:20px;background:linear-gradient(90deg,var(--earth),var(--fire));flex-shrink:0}
+.margin-pct{font-family:var(--mono);font-size:10px;color:var(--earth);font-weight:600;white-space:nowrap}
+.why-pick{font-size:11px;color:var(--t2);background:var(--c3);border-radius:var(--rsm);padding:10px 12px;margin-top:12px;line-height:1.7;border-left:3px solid var(--fire)}
+.why-ico{margin-right:6px}
+.margin-summary-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 0.5fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:11px;color:var(--t2);font-family:var(--mono)}
+.margin-summary-row:last-child{border-bottom:none}
+.margin-summary-row.header{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bd2)}
+.margin-summary-row.total{color:var(--t1);font-weight:600;border-top:1px solid var(--bd2);border-bottom:none;margin-top:4px;padding-top:10px}
+.margin-summary-row .grn{color:var(--earth)}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eye">swaroop's empire dashboard · 12-month build</div>
+  <div class="hero-name">₹5L/MONTH<br>EMPIRE</div>
+  <div class="hero-sub">day 1 starts 26 may 2026 · services → agents → brand → courses · 12 months to ₹5L</div>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-n" id="h-d60">1</div><div class="hs-l">day / 60</div></div>
+    <div class="hs-div"></div>
+    <div class="hs"><div class="hs-n" id="h-d40" style="color:var(--water)">1</div><div class="hs-l">day / 40 intl.</div></div>
+    <div class="hs-div"></div>
+    <div class="hs"><div class="hs-n" id="h-tasks" style="color:var(--earth)">0</div><div class="hs-l">tasks done</div></div>
+    <div class="hs-div"></div>
+    <div class="hs"><div class="hs-n" id="h-clients" style="color:var(--ash)">0</div><div class="hs-l">clients closed</div></div>
+    <div class="hs-div"></div>
+    <div class="hs"><div class="hs-n" id="h-agents" style="color:var(--rose)">0</div><div class="hs-l">agents sold</div></div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="mstrip">
+  <div class="mc f"><div class="mc-l">total revenue</div><div class="mc-v" id="m-rev">₹0</div><div class="mc-s">all streams combined</div><div class="bw"><div class="bar f" id="bar-rev" style="width:0%"></div></div></div>
+  <div class="mc e"><div class="mc-l">pure margin</div><div class="mc-v" id="m-margin">₹0</div><div class="mc-s">after all costs</div><div class="bw"><div class="bar e" id="bar-margin" style="width:0%"></div></div></div>
+  <div class="mc w"><div class="mc-l">usd earned</div><div class="mc-v" id="m-usd">$0</div><div class="mc-s">target $4,500/mo</div><div class="bw"><div class="bar w" id="bar-usd" style="width:0%"></div></div></div>
+  <div class="mc a"><div class="mc-l">funnel</div><div class="mc-v" id="m-funnel" style="font-size:18px">0→0→0</div><div class="mc-s">reach→call→close</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('cmd',this)">⚡ command</button>
+  <button class="tab" onclick="switchTab('road',this)">🗺 roadmap</button>
+  <button class="tab" onclick="switchTab('streams',this)">💰 streams</button>
+  <button class="tab" onclick="switchTab('pipe',this)">🎯 pipeline</button>
+  <button class="tab" onclick="switchTab('svc',this)">💼 services</button>
+  <button class="tab" onclick="switchTab('agents',this)">🤖 ai agents</button>
+  <button class="tab" onclick="switchTab('brand',this)">🎬 brand</button>
+  <button class="tab" onclick="switchTab('plan',this)">📋 plan</button>
+  <button class="tab" onclick="switchTab('routine',this)">🕐 routine</button>
+</div>
+
+<!-- ═══ COMMAND ═══ -->
+<div class="view active" id="view-cmd">
+  <div class="mot">
+    <div class="mot-t">6 FOCUSED HOURS A DAY. PERSONAL TIME PROTECTED. SYSTEMS DO THE REST.</div>
+    <div class="mot-s">you are not trading time for money anymore. you are building machines that earn while you rest.<br>every client retainer → funds the next asset. every asset → reduces how many clients you need.</div>
+  </div>
+
+  <div class="sec">today's 6 mission blocks — check off each</div>
+  <div class="card" style="margin-bottom:16px" id="daily-chks"></div>
+
+  <div class="sec">platform fire — tap + to log each touch</div>
+  <div class="p-grid">
+    <div class="pcard"><div class="pico">💼</div><div class="pname">LinkedIn Intl.</div><div class="ptgt">30 req/day</div><div class="pnum" id="pc-li">0</div><div class="pbtns"><button class="pb pl" onclick="bump('li',1)">+</button><button class="pb pm" onclick="bump('li',-1)">−</button></div></div>
+    <div class="pcard"><div class="pico">📋</div><div class="pname">Upwork</div><div class="ptgt">3 props/day</div><div class="pnum" id="pc-uw">0</div><div class="pbtns"><button class="pb pl" onclick="bump('uw',1)">+</button><button class="pb pm" onclick="bump('uw',-1)">−</button></div></div>
+    <div class="pcard"><div class="pico">✉️</div><div class="pname">Cold Email</div><div class="ptgt">15/day</div><div class="pnum" id="pc-ce">0</div><div class="pbtns"><button class="pb pl" onclick="bump('ce',1)">+</button><button class="pb pm" onclick="bump('ce',-1)">−</button></div></div>
+    <div class="pcard"><div class="pico">💬</div><div class="pname">Domestic DMs</div><div class="ptgt">20/day</div><div class="pnum" id="pc-dm">0</div><div class="pbtns"><button class="pb pl" onclick="bump('dm',1)">+</button><button class="pb pm" onclick="bump('dm',-1)">−</button></div></div>
+  </div>
+
+  <div class="sec">live funnel — full control, tap +/− or type directly</div>
+  <div class="funnel-row">
+    <div class="fc">
+      <div class="fnum" id="f-out" style="color:var(--water)">0</div>
+      <div class="flbl">outreach</div>
+      <div class="fc-btns">
+        <button class="fcb minus" onclick="bumpF('out',-1)">−</button>
+        <button class="fcb plus" onclick="bumpF('out',1)">+</button>
+      </div>
+    </div>
+    <div class="farr">›</div>
+    <div class="fc">
+      <div class="fnum" id="f-conv" style="color:var(--fire)">0</div>
+      <div class="flbl">conversations</div>
+      <div class="fc-btns">
+        <button class="fcb minus" onclick="bumpF('conv',-1)">−</button>
+        <button class="fcb plus" onclick="bumpF('conv',1)">+</button>
+      </div>
+    </div>
+    <div class="farr">›</div>
+    <div class="fc">
+      <div class="fnum" id="f-call" style="color:var(--ash)">0</div>
+      <div class="flbl">calls booked</div>
+      <div class="fc-btns">
+        <button class="fcb minus" onclick="bumpF('call',-1)">−</button>
+        <button class="fcb plus" onclick="bumpF('call',1)">+</button>
+      </div>
+    </div>
+    <div class="farr">›</div>
+    <div class="fc">
+      <div class="fnum" id="f-close" style="color:var(--earth)">0</div>
+      <div class="flbl">closed</div>
+      <div class="fc-btns">
+        <button class="fcb minus" onclick="bumpF('close',-1)">−</button>
+        <button class="fcb plus" onclick="bumpF('close',1)">+</button>
+      </div>
+    </div>
+  </div>
+  <button class="closebtn" onclick="bumpF('close',1)">🔥 CLIENT CLOSED</button>
+  <button class="resetbtn" onclick="resetFunnel()">↺ reset all funnel counts to zero</button>
+
+  <hr/>
+  <div class="sec">your 6-hour daily schedule</div>
+  <div class="sched">
+    <div class="sblock sl-f"><div class="stime">6:30</div><div><div class="sact">30 LinkedIn intl. requests (UAE/AU/UK/US founders). Reply to yesterday's connections with audit hook. This is the most important 30 minutes of your day.</div><div class="sdur">30 min · 🌍 international pipeline</div></div></div>
+    <div class="sblock sl-w"><div class="stime">7:00</div><div><div class="sact">3 Upwork proposals + 15 personalised cold emails via Apollo. 20 domestic DMs. Follow up all open leads — domestic + intl. Follow-up #3 is where deals close.</div><div class="sdur">1 hour · 🇮🇳+🌍 outreach block</div></div></div>
+    <div class="sblock sl-a"><div class="stime">8:00</div><div><div class="sact">Deep work: client delivery (Meta campaigns, n8n workflows, reporting). This is your core revenue activity. No distractions. No calls during this block.</div><div class="sdur">2 hours · client delivery · protected block</div></div></div>
+    <div class="sblock sl-e"><div class="stime">10:00</div><div><div class="sact">AI agent building OR HeyGen content creation. Alternate daily. Build the assets that earn without your time. One n8n agent built = passive monthly income. One HeyGen video = 30 days of content.</div><div class="sdur">1 hour · asset building · future income</div></div></div>
+    <div class="sblock sl-f"><div class="stime">11:00</div><div><div class="sact">Discovery calls + admin + Calendly bookings + invoicing via Wise. Quick wins only. No rabbit holes.</div><div class="sdur">1 hour · revenue calls + admin</div></div></div>
+    <div class="sblock sl-p"><div class="stime personal">12:00 PM →</div><div><div class="sact" style="color:var(--earth)">YOUR TIME. Gym. Family. Food. Rest. Content ideas come to you when you rest. The systems run without you. This is the whole point.</div><div class="sdur">personal time · protected · zero guilt</div></div></div>
+    <div class="sblock sl-e"><div class="stime">Evening</div><div><div class="sact">10 minutes only: post one LinkedIn value piece (can be HeyGen avatar video). Nudge any lead silent for 48hrs. Update funnel counters. That's it.</div><div class="sdur">10–20 min optional · content + nudges</div></div></div>
+  </div>
+
+  <hr/>
+  <div class="sec">outreach scripts</div>
+  <div class="scbox"><div class="sc-l">LinkedIn After Accepting</div><div class="sc-t">"Thanks for connecting [name]. Quick observation — your [ad/funnel] has one gap that's likely losing you leads. I made a 2-min loom showing exactly what I'd fix. Want me to send it? No pitch, just value."</div></div>
+  <div class="scbox"><div class="sc-l">Cold Email Subject: your meta ads are leaking money</div><div class="sc-t">"Hey [name], noticed [brand] is running Meta ads but likely losing 40%+ of leads with no automated follow-up. I built a system for a similar [niche] brand that recovered 34% of lost leads via WhatsApp + email automatically. Worth 15 minutes? [calendly link]"</div></div>
+  <div class="scbox"><div class="sc-l">Upwork Proposal Opener</div><div class="sc-t">"I read your post twice. Here's the difference: I won't just manage your ads — I'll build an automated lead recovery system in the backend so every non-converting click gets followed up automatically. Did this for a client in 5 days, recovered 40% of lost leads. Not a standard service. If that's what you want, let's talk."</div></div>
+</div>
+
+<!-- ═══ ROADMAP ═══ -->
+<div class="view" id="view-road">
+  <div class="sec">12-month empire build — sequential, not simultaneous</div>
+
+  <div class="phase-card active-phase">
+    <div class="phase-num">1</div>
+    <div class="phase-hd">
+      <div><div class="badge bf" style="margin-bottom:8px">months 1–3</div><div class="phase-title">Cash Machine — Services Only</div><div class="phase-months">zero distraction · close clients · deliver fast · fund everything else</div></div>
+      <div class="phase-target">₹2.5L/mo</div>
+    </div>
+    <div class="phase-tasks">
+      <div class="pt"><span class="pdot f"></span><span>Close 3 domestic retainers (Tier 1 + 2) using domestic outreach + referrals</span></div>
+      <div class="pt"><span class="pdot w"></span><span>Close 2 international retainers at $1,000–1,500/month via LinkedIn + Upwork</span></div>
+      <div class="pt"><span class="pdot f"></span><span>Set up Wise + Payoneer + Deel — receive USD cleanly before month 2</span></div>
+      <div class="pt"><span class="pdot e"></span><span>Deliver insane results for all 5 clients — this is your case study factory</span></div>
+      <div class="pt"><span class="pdot a"></span><span>Do NOT start courses, agents, or brand building this phase — focus only</span></div>
+    </div>
+    <div class="phase-rev-grid">
+      <div class="prv"><div class="prv-n" style="color:var(--fire)">₹1L</div><div class="prv-l">domestic retainers</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--water)">₹1.65L</div><div class="prv-l">intl. ($2k/mo)</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--earth)">₹2.5L</div><div class="prv-l">total / month</div></div>
+    </div>
+  </div>
+
+  <div class="phase-card">
+    <div class="phase-num">2</div>
+    <div class="phase-hd">
+      <div><div class="badge bw2" style="margin-bottom:8px">months 4–6</div><div class="phase-title">Asset Layer — Build Things That Earn Without You</div><div class="phase-months">services stable · now add ai agents + start personal brand</div></div>
+      <div class="phase-target">₹3.5L/mo</div>
+    </div>
+    <div class="phase-tasks">
+      <div class="pt"><span class="pdot a"></span><span>Build WhatsApp Lead Bot agent (n8n) — sell at ₹30k setup + ₹8k/mo subscription</span></div>
+      <div class="pt"><span class="pdot a"></span><span>Build Meta Ads Reporting Agent — auto-weekly reports, bundle at ₹5k/mo</span></div>
+      <div class="pt"><span class="pdot e"></span><span>Launch HeyGen AI avatar + ElevenLabs voice — record once, post daily on auto</span></div>
+      <div class="pt"><span class="pdot e"></span><span>Start LinkedIn + Instagram content machine — 1 post/day from avatar content</span></div>
+      <div class="pt"><span class="pdot f"></span><span>Add 1 new intl. client — now at $3,000/mo international revenue</span></div>
+    </div>
+    <div class="phase-rev-grid">
+      <div class="prv"><div class="prv-n" style="color:var(--fire)">₹2.5L</div><div class="prv-l">services</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--ash)">₹50k</div><div class="prv-l">ai agent subs</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--earth)">₹3.5L</div><div class="prv-l">total / month</div></div>
+    </div>
+  </div>
+
+  <div class="phase-card">
+    <div class="phase-num">3</div>
+    <div class="phase-hd">
+      <div><div class="badge be" style="margin-bottom:8px">months 7–9</div><div class="phase-title">Brand + Products — Inbound Starts Replacing Outbound</div><div class="phase-months">personal brand attracting leads · first course launches · agents scaling</div></div>
+      <div class="phase-target">₹4.5L/mo</div>
+    </div>
+    <div class="phase-tasks">
+      <div class="pt"><span class="pdot e"></span><span>Launch first course: "Meta Ads + AI Automation for Indian Businesses" — Tamil + English</span></div>
+      <div class="pt"><span class="pdot e"></span><span>Price: ₹5,000–8,000 — target 30 students/month = ₹1.5–2.4L additional</span></div>
+      <div class="pt"><span class="pdot a"></span><span>AI agents at 15+ subscriptions — ₹1L/mo recurring, zero extra time</span></div>
+      <div class="pt"><span class="pdot f"></span><span>Personal brand generating 2–3 inbound intl. leads/month — reduce cold outreach</span></div>
+      <div class="pt"><span class="pdot w"></span><span>First brand deal pitch to AI/SaaS tools (Apollo, n8n, HeyGen, etc.)</span></div>
+    </div>
+    <div class="phase-rev-grid">
+      <div class="prv"><div class="prv-n" style="color:var(--fire)">₹2.5L</div><div class="prv-l">services</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--ash)">₹1L</div><div class="prv-l">ai agents</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--earth)">₹1L</div><div class="prv-l">course</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--earth)">₹4.5L</div><div class="prv-l">total</div></div>
+    </div>
+  </div>
+
+  <div class="phase-card">
+    <div class="phase-num">4</div>
+    <div class="phase-hd">
+      <div><div class="badge ba" style="margin-bottom:8px">months 10–12</div><div class="phase-title">Full Stack Empire — Peaceful, Scalable, Compounding</div><div class="phase-months">all 6 streams firing · inbound only · working 4hrs/day</div></div>
+      <div class="phase-target">₹5.5L/mo</div>
+    </div>
+    <div class="phase-tasks">
+      <div class="pt"><span class="pdot f"></span><span>Services: 5–6 clients total, all retainer, mostly automated delivery via templates + agents</span></div>
+      <div class="pt"><span class="pdot a"></span><span>AI agents: 25+ subscriptions = ₹1.5–2L/mo passive, zero extra work</span></div>
+      <div class="pt"><span class="pdot e"></span><span>Course: cohort model running, community growing, ₹1L+/mo recurring</span></div>
+      <div class="pt"><span class="pdot w"></span><span>Brand deals: 2–3 deals/month with AI/marketing SaaS tools at ₹25–75k each</span></div>
+      <div class="pt"><span class="pdot f"></span><span>YouTube Shorts monetisation beginning — small but compounding</span></div>
+    </div>
+    <div class="phase-rev-grid">
+      <div class="prv"><div class="prv-n" style="color:var(--fire)">₹2L</div><div class="prv-l">services</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--ash)">₹1.5L</div><div class="prv-l">agents</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--earth)">₹1L</div><div class="prv-l">course</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--water)">₹75k</div><div class="prv-l">brand deals</div></div>
+      <div class="prv"><div class="prv-n" style="color:var(--earth)">₹5.5L</div><div class="prv-l">total ✅</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STREAMS ═══ -->
+<div class="view" id="view-streams">
+  <div class="total-card">
+    <div class="total-lbl">TOTAL MONTHLY REVENUE — ALL STREAMS</div>
+    <div class="total-val" id="st-total">₹0</div>
+    <div class="total-sub" id="st-sub">₹0 of ₹5,50,000 target · 0%</div>
+    <div class="total-prog"><div class="total-bar" id="st-bar" style="width:0%"></div></div>
+  </div>
+
+  <div class="rs-grid" id="streams-grid"></div>
+</div>
+
+<!-- ═══ PIPELINE ═══ -->
+<div class="view" id="view-pipe">
+  <div class="milestone-strip">
+    <div class="ms-item">
+      <div class="ms-num" id="ms-rev">₹0</div>
+      <div class="ms-lbl">current MRR</div>
+    </div>
+    <div class="ms-arrow">→</div>
+    <div class="ms-item active-ms" id="ms-1l-wrap">
+      <div class="ms-num" style="color:var(--fire)">₹1L</div>
+      <div class="ms-lbl">milestone 1</div>
+      <div class="ms-pct" id="ms-1l-pct">0%</div>
+    </div>
+    <div class="ms-arrow">→</div>
+    <div class="ms-item">
+      <div class="ms-num" style="color:var(--ash)">₹3L</div>
+      <div class="ms-lbl">milestone 2</div>
+      <div class="ms-pct" id="ms-3l-pct">0%</div>
+    </div>
+    <div class="ms-arrow">→</div>
+    <div class="ms-item">
+      <div class="ms-num" style="color:var(--earth)">₹5L</div>
+      <div class="ms-lbl">ultimate goal</div>
+      <div class="ms-pct" id="ms-5l-pct">0%</div>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:16px">all clients — 🇮🇳 domestic + 🌍 international</div>
+  <div class="card" id="client-list" style="margin-bottom:10px"></div>
+  <button class="addbtn" onclick="addClient()">+ add client</button>
+  <hr/>
+  <div class="sec">₹1L milestone — 3 clients needed</div>
+  <div style="background:var(--c3);border-radius:20px;height:6px;margin-bottom:6px"><div style="height:6px;border-radius:20px;background:linear-gradient(90deg,var(--earth),var(--fire));transition:width .5s" id="cl-bar"></div></div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--t3);margin-bottom:16px" id="cl-lbl">₹0 of ₹1,00,000 pure margin target</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="rev-row"><span>3 clients × ₹40k/mo</span><span>₹1.2L revenue</span></div>
+    <div class="rev-row"><span>Tools cost (n8n, Apollo, misc)</span><span style="color:var(--red)">−₹20,000</span></div>
+    <div class="rev-row"><span>Pure margin take-home</span><span style="color:var(--earth)">₹1,00,000 ✅</span></div>
+  </div>
+  <div class="sec">₹5L MRR ultimate model</div>
+  <div class="card">
+    <div class="rev-row"><span>Services (dom + intl. retainers)</span><span>₹2L/mo</span></div>
+    <div class="rev-row"><span>AI agent subscriptions</span><span>₹1.5L/mo</span></div>
+    <div class="rev-row"><span>Course + digital products</span><span>₹1L/mo</span></div>
+    <div class="rev-row"><span>Brand deals + content revenue</span><span>₹75k/mo</span></div>
+    <div class="rev-row"><span>Tools + ops cost</span><span style="color:var(--red)">−₹25,000</span></div>
+    <div class="rev-row"><span>Pure margin</span><span style="color:var(--earth)">₹5L+ 🔥</span></div>
+  </div>
+</div>
+
+<!-- ═══ SERVICES ═══ -->
+<div class="view" id="view-svc">
+
+  <div class="svc-goal">
+    <div class="svc-goal-lbl">ultimate goal</div>
+    <div class="svc-goal-num">₹5L MRR</div>
+    <div class="svc-goal-path">step 1: hit ₹1L with services → step 2: add agents → step 3: brand + course → ₹5L</div>
+  </div>
+
+  <div class="sec">your 4 services + 1 bundle — indian market 2026 pricing</div>
+
+  <!-- Market comparison banner -->
+  <div class="mkt-banner">
+    <div class="mkt-col"><div class="mkt-label">cheap freelancers</div><div class="mkt-price">₹5k–12k/mo</div><div class="mkt-note">poor quality · no systems · ghost after 1 month</div></div>
+    <div class="mkt-arrow">→</div>
+    <div class="mkt-col you"><div class="mkt-label" style="color:var(--fire)">you (swaroop)</div><div class="mkt-price" style="color:var(--fire)">₹15k–38k/mo</div><div class="mkt-note" style="color:var(--t2)">ai automation · real results · long retention</div></div>
+    <div class="mkt-arrow">→</div>
+    <div class="mkt-col"><div class="mkt-label">premium agencies</div><div class="mkt-price">₹50k–1.5L/mo</div><div class="mkt-note">same output · slow · overpriced · no automation</div></div>
+  </div>
+
+  <!-- S1 -->
+  <div class="svc-card">
+    <div class="svc-head">
+      <div>
+        <div class="svc-num">01</div>
+        <div class="svc-name">Meta Lead Machine</div>
+        <div class="svc-type">entry service · low-touch · monthly retainer</div>
+      </div>
+      <div class="svc-price-wrap">
+        <div class="svc-inr">₹20,000–25,000/mo</div>
+        <div class="svc-usd">🌍 $300–400/mo</div>
+      </div>
+    </div>
+
+    <div class="svc-body">
+      <div class="svc-col">
+        <div class="svc-col-title">what's included</div>
+        <div class="svc-item">✦ FB + IG campaign setup (up to 3 campaigns)</div>
+        <div class="svc-item">✦ Audience research + targeting strategy</div>
+        <div class="svc-item">✦ Ad copy direction + creative brief</div>
+        <div class="svc-item">✦ Daily monitoring + bid optimisation</div>
+        <div class="svc-item">✦ A/B testing (2–3 variants running)</div>
+        <div class="svc-item">✦ Weekly auto-report every Monday (n8n)</div>
+        <div class="svc-item">✦ Monthly strategy call (30 min)</div>
+        <div class="svc-item">✦ Meta Pixel + event tracking setup</div>
+        <div class="svc-rule">⚠ client min ad spend: ₹15,000/month</div>
+      </div>
+      <div class="svc-col">
+        <div class="svc-col-title">cost · margin · cap</div>
+        <div class="cost-row"><span class="cost-lbl">tools (Meta Business, reporting)</span><span class="cost-val red">₹1,500</span></div>
+        <div class="cost-row"><span class="cost-lbl">your time (10–12 hrs/mo)</span><span class="cost-val red">₹3,000</span></div>
+        <div class="cost-row bdr"><span class="cost-lbl">max cost cap</span><span class="cost-val red">₹4,500</span></div>
+        <div class="cost-row"><span class="cost-lbl">gross margin</span><span class="cost-val grn">₹15,500</span></div>
+        <div class="margin-bar-wrap">
+          <div class="margin-bar" style="width:77%"></div>
+          <span class="margin-pct">77% margin</span>
+        </div>
+        <div class="svc-col-title" style="margin-top:12px">results to promise</div>
+        <div class="svc-item">Real estate: 15–35 leads/mo @ ₹600–1,300 CPL</div>
+        <div class="svc-item">Coaching: 50–100 leads/mo @ ₹150–300 CPL</div>
+        <div class="svc-item">Clinics/services: 40–80 inquiries @ ₹80–200 CPL</div>
+        <div class="svc-item">Month 1 test → Month 2 optimise → Month 3 stable</div>
+      </div>
+    </div>
+    <div class="why-pick"><span class="why-ico">💡</span>why clients pick this over others: competitors charge ₹10–15k for basic ad running with zero reporting. You charge ₹20k but deliver automated weekly reports + proper A/B testing. The price gap is small. The quality gap is massive.</div>
+  </div>
+
+  <!-- S2 -->
+  <div class="svc-card hot">
+    <div class="svc-hot-tag">⭐ main offer · highest margin · push this hardest</div>
+    <div class="svc-head">
+      <div>
+        <div class="svc-num" style="color:var(--fire)">02</div>
+        <div class="svc-name">Meta + WhatsApp Automation</div>
+        <div class="svc-type">unfair advantage · fully automated · monthly retainer</div>
+      </div>
+      <div class="svc-price-wrap">
+        <div class="svc-inr">₹38,000–45,000/mo</div>
+        <div class="svc-usd">🌍 $500–600/mo</div>
+      </div>
+    </div>
+
+    <div class="svc-body">
+      <div class="svc-col">
+        <div class="svc-col-title">what's included</div>
+        <div class="svc-item">✦ Everything in Service 01</div>
+        <div class="svc-item">✦ n8n WhatsApp bot: lead → reply in 90 seconds</div>
+        <div class="svc-item">✦ Catalog / PDF auto-delivered on WhatsApp</div>
+        <div class="svc-item">✦ 5-day automated follow-up sequence</div>
+        <div class="svc-item">✦ Lead scoring (hot / warm / cold via AI)</div>
+        <div class="svc-item">✦ Weekly performance dashboard (auto-generated)</div>
+        <div class="svc-item">✦ Appointment booking integration (Calendly)</div>
+        <div class="svc-item">✦ HOT lead instant alert to client's phone</div>
+        <div class="svc-rule">⚠ client min ad spend: ₹15,000/month</div>
+      </div>
+      <div class="svc-col">
+        <div class="svc-col-title">cost · margin · cap</div>
+        <div class="cost-row"><span class="cost-lbl">Meta tools + reporting</span><span class="cost-val red">₹1,500</span></div>
+        <div class="cost-row"><span class="cost-lbl">n8n hosting (per client)</span><span class="cost-val red">₹1,000</span></div>
+        <div class="cost-row"><span class="cost-lbl">WATI WhatsApp (per client)</span><span class="cost-val red">₹1,200</span></div>
+        <div class="cost-row"><span class="cost-lbl">your time (15 hrs/mo)</span><span class="cost-val red">₹3,500</span></div>
+        <div class="cost-row bdr"><span class="cost-lbl">max cost cap</span><span class="cost-val red">₹7,200</span></div>
+        <div class="cost-row"><span class="cost-lbl">gross margin</span><span class="cost-val grn">₹30,800</span></div>
+        <div class="margin-bar-wrap">
+          <div class="margin-bar" style="width:81%"></div>
+          <span class="margin-pct">81% margin</span>
+        </div>
+        <div class="svc-col-title" style="margin-top:12px">why clients never leave</div>
+        <div class="svc-item">Lead replied in 90 sec → 2–3× more conversions</div>
+        <div class="svc-item">Automation is sticky — high switching cost</div>
+        <div class="svc-item">They see bot working in WhatsApp daily</div>
+        <div class="svc-item">Average client retention: 10–16 months</div>
+      </div>
+    </div>
+    <div class="why-pick"><span class="why-ico">💡</span>why clients pick this over others: no agency in India offers Meta ads + WhatsApp automation as a combined retainer at ₹38k. The closest premium agencies charge ₹60–80k for less. You are the obvious choice for smart business owners.</div>
+  </div>
+
+  <!-- S3 -->
+  <div class="svc-card">
+    <div class="svc-head">
+      <div>
+        <div class="svc-num">03</div>
+        <div class="svc-name">Social Media Management</div>
+        <div class="svc-type">content + community · monthly retainer · high volume</div>
+      </div>
+      <div class="svc-price-wrap">
+        <div class="svc-inr">₹15,000–18,000/mo</div>
+        <div class="svc-usd">🌍 $200–250/mo</div>
+      </div>
+    </div>
+
+    <div class="svc-body">
+      <div class="svc-col">
+        <div class="svc-col-title">what's included</div>
+        <div class="svc-item">✦ Instagram + Facebook + LinkedIn management</div>
+        <div class="svc-item">✦ 15 posts/month (graphics + captions)</div>
+        <div class="svc-item">✦ 20 Stories/month (IG + FB)</div>
+        <div class="svc-item">✦ Monthly content calendar (approved in advance)</div>
+        <div class="svc-item">✦ Hashtag research + niche strategy</div>
+        <div class="svc-item">✦ Comment + DM moderation (business hours)</div>
+        <div class="svc-item">✦ Monthly performance analytics report</div>
+        <div class="svc-item">✦ Brand voice guide (first month)</div>
+        <div class="svc-rule">⚠ client provides raw photos/videos if needed</div>
+      </div>
+      <div class="svc-col">
+        <div class="svc-col-title">cost · margin · cap</div>
+        <div class="cost-row"><span class="cost-lbl">Canva Pro (shared across clients)</span><span class="cost-val red">₹300</span></div>
+        <div class="cost-row"><span class="cost-lbl">scheduling tool (Buffer/Meta)</span><span class="cost-val red">₹400</span></div>
+        <div class="cost-row"><span class="cost-lbl">your time (12–15 hrs/mo)</span><span class="cost-val red">₹2,500</span></div>
+        <div class="cost-row bdr"><span class="cost-lbl">max cost cap</span><span class="cost-val red">₹3,200</span></div>
+        <div class="cost-row"><span class="cost-lbl">gross margin</span><span class="cost-val grn">₹11,800</span></div>
+        <div class="margin-bar-wrap">
+          <div class="margin-bar" style="width:79%"></div>
+          <span class="margin-pct">79% margin</span>
+        </div>
+        <div class="svc-col-title" style="margin-top:12px">market positioning</div>
+        <div class="svc-item">Cheap SMM agencies: ₹5–10k (3 posts/week, poor quality)</div>
+        <div class="svc-item">You at ₹15k: 15 posts + stories + analytics + community</div>
+        <div class="svc-item">Premium agencies: ₹20–40k for same deliverables</div>
+        <div class="svc-item">You are clearly the best value at ₹15k</div>
+      </div>
+    </div>
+    <div class="why-pick"><span class="why-ico">💡</span>why clients pick this over others: most SMM freelancers charge ₹5–10k but deliver 3 mediocre posts a week with no strategy. You deliver a proper content system at ₹15k — still cheaper than the ₹20–40k agencies. Clients feel they're getting a deal.</div>
+  </div>
+
+  <!-- S4 -->
+  <div class="svc-card">
+    <div class="svc-head">
+      <div>
+        <div class="svc-num">04</div>
+        <div class="svc-name">Full AI Marketing System</div>
+        <div class="svc-type">one-time build + monthly maintenance · premium project</div>
+      </div>
+      <div class="svc-price-wrap">
+        <div class="svc-inr">₹50,000–70,000 setup</div>
+        <div class="svc-usd">+ ₹12,000/mo retainer</div>
+      </div>
+    </div>
+
+    <div class="svc-body">
+      <div class="svc-col">
+        <div class="svc-col-title">what's included</div>
+        <div class="svc-item">✦ Full n8n build: lead → CRM → WhatsApp → PDF → follow-up</div>
+        <div class="svc-item">✦ Meta Pixel + Conversions API (CAPI) setup</div>
+        <div class="svc-item">✦ Google Sheets / Notion CRM integration</div>
+        <div class="svc-item">✦ AI lead scoring (Claude API)</div>
+        <div class="svc-item">✦ Auto-reporting dashboard (weekly, hands-free)</div>
+        <div class="svc-item">✦ Appointment booking automation</div>
+        <div class="svc-item">✦ 30-day support + team training</div>
+        <div class="svc-item">✦ Full SOP documentation handover</div>
+        <div class="svc-rule">⚠ monthly ₹10k retainer for maintenance + updates</div>
+      </div>
+      <div class="svc-col">
+        <div class="svc-col-title">cost · margin · cap</div>
+        <div class="cost-row"><span class="cost-lbl">build time (20–25 hrs @ value)</span><span class="cost-val red">₹7,000</span></div>
+        <div class="cost-row"><span class="cost-lbl">tools + hosting setup</span><span class="cost-val red">₹2,000</span></div>
+        <div class="cost-row bdr"><span class="cost-lbl">max cost cap (one-time)</span><span class="cost-val red">₹9,000</span></div>
+        <div class="cost-row"><span class="cost-lbl">setup margin (avg ₹60k)</span><span class="cost-val grn">₹51,000</span></div>
+        <div class="margin-bar-wrap">
+          <div class="margin-bar" style="width:85%"></div>
+          <span class="margin-pct">85% margin on setup</span>
+        </div>
+        <div class="cost-row" style="margin-top:8px"><span class="cost-lbl">monthly cost (maintenance)</span><span class="cost-val red">₹1,500</span></div>
+        <div class="cost-row"><span class="cost-lbl">monthly margin (₹12k retainer)</span><span class="cost-val grn">₹10,500</span></div>
+        <div class="svc-item" style="margin-top:8px">Pitch when client wants to own the system</div>
+        <div class="svc-item">Use as cash injection + lock in monthly income</div>
+      </div>
+    </div>
+    <div class="why-pick"><span class="why-ico">💡</span>why clients pick this: they've been burned by agencies before and want to own their own system. You build it, they own it, you maintain it. The setup fee is a one-time investment. Monthly ₹10k feels cheap for a fully automated lead machine.</div>
+  </div>
+
+  <!-- BUNDLE -->
+  <div class="svc-card" style="border-color:rgba(167,139,250,.3);background:linear-gradient(135deg,rgba(167,139,250,.04),transparent)">
+    <div class="svc-hot-tag" style="background:var(--ash2);color:var(--ash)">🎁 bundle offer · best deal for client · great margin for you</div>
+    <div class="svc-head">
+      <div>
+        <div class="svc-num" style="color:var(--ash)">05</div>
+        <div class="svc-name">Meta Ads + Social Media Bundle</div>
+        <div class="svc-type">ads + organic combined · full digital presence · monthly</div>
+      </div>
+      <div class="svc-price-wrap">
+        <div class="svc-inr">₹28,000/mo</div>
+        <div class="svc-usd">saves ₹7,000 vs separate</div>
+      </div>
+    </div>
+
+    <div class="svc-body">
+      <div class="svc-col">
+        <div class="svc-col-title">what's included</div>
+        <div class="svc-item">✦ Everything in Service 01 (Meta Ads)</div>
+        <div class="svc-item">✦ Everything in Service 03 (Social Media)</div>
+        <div class="svc-item">✦ Unified content strategy (ads + organic aligned)</div>
+        <div class="svc-item">✦ Ad creatives repurposed as organic posts</div>
+        <div class="svc-item">✦ Single point of contact for all digital</div>
+        <div class="svc-item">✦ Combined monthly performance report</div>
+        <div class="svc-item">✦ Priority support (24hr response)</div>
+        <div class="svc-rule">⚠ client min ad spend: ₹10,000/month</div>
+      </div>
+      <div class="svc-col">
+        <div class="svc-col-title">cost · margin · cap</div>
+        <div class="cost-row"><span class="cost-lbl">tools (ads + social combined)</span><span class="cost-val red">₹2,200</span></div>
+        <div class="cost-row"><span class="cost-lbl">your time (18–20 hrs/mo)</span><span class="cost-val red">₹4,500</span></div>
+        <div class="cost-row bdr"><span class="cost-lbl">max cost cap</span><span class="cost-val red">₹6,700</span></div>
+        <div class="cost-row"><span class="cost-lbl">gross margin</span><span class="cost-val grn">₹21,300</span></div>
+        <div class="margin-bar-wrap">
+          <div class="margin-bar" style="width:76%"></div>
+          <span class="margin-pct">76% margin</span>
+        </div>
+        <div class="svc-col-title" style="margin-top:12px">pitch angle</div>
+        <div class="svc-item">Client pays ₹35k separately (S1 + S3)</div>
+        <div class="svc-item">Bundle saves them ₹7,000/month</div>
+        <div class="svc-item">You get one retainer vs managing two</div>
+        <div class="svc-item">Higher lifetime value, lower churn risk</div>
+      </div>
+    </div>
+    <div class="why-pick"><span class="why-ico">💡</span>why clients pick the bundle: they want one agency handling everything — no coordination between two vendors, no blame-shifting. The ₹7k saving makes it an easy yes. You benefit from a larger retainer and simpler client management.</div>
+  </div>
+
+  <hr/>
+
+  <!-- Summary margin table -->
+  <div class="sec">margin summary — all 5 services at a glance</div>
+  <div class="card">
+    <div class="margin-summary-row header"><span>service</span><span>price</span><span>max cost</span><span>margin</span><span>%</span></div>
+    <div class="margin-summary-row"><span>S1 Meta Ads Only</span><span>₹22,500</span><span>₹4,500</span><span class="grn">₹18,000</span><span class="grn">80%</span></div>
+    <div class="margin-summary-row"><span>S2 Meta + WhatsApp</span><span>₹42,000</span><span>₹7,200</span><span class="grn">₹34,800</span><span class="grn">83%</span></div>
+    <div class="margin-summary-row"><span>S3 Social Media Mgmt</span><span>₹16,500</span><span>₹3,200</span><span class="grn">₹13,300</span><span class="grn">81%</span></div>
+    <div class="margin-summary-row"><span>S4 AI System (setup)</span><span>₹60,000</span><span>₹9,000</span><span class="grn">₹51,000</span><span class="grn">85%</span></div>
+    <div class="margin-summary-row"><span>S5 Bundle (Ads+SMM)</span><span>₹28,000</span><span>₹6,700</span><span class="grn">₹21,300</span><span class="grn">76%</span></div>
+    <div class="margin-summary-row total"><span>₹1L goal: S2 × 3 clients</span><span>₹1,26,000</span><span>₹21,600</span><span class="grn">₹1,04,400</span><span class="grn">83%</span></div>
+  </div>
+
+  <hr/>
+  <div class="sec">who to target — 5 proven niches in india</div>
+
+  <div class="target-grid">
+    <div class="tgt-card">
+      <div class="tgt-rank">⭐⭐⭐</div>
+      <div class="tgt-name">Real Estate Agents</div>
+      <div class="tgt-why">One closed deal = ₹1–5L commission. They understand lead gen. Results visible fast. Chennai market is huge.</div>
+      <div class="tgt-result">15–35 leads/mo · CPL ₹600–1,300</div>
+      <div class="tgt-budget">ad budget: ₹15–30k/mo</div>
+      <div class="tgt-retention" style="background:var(--earth2);color:var(--earth)">retention: very high</div>
+    </div>
+    <div class="tgt-card">
+      <div class="tgt-rank">⭐⭐⭐</div>
+      <div class="tgt-name">Coaching Institutes</div>
+      <div class="tgt-why">NEET, UPSC, CA, MBA — all spending on ads. Clear enrollment goal. Every city has 20–50 of these.</div>
+      <div class="tgt-result">50–100 leads/mo · CPL ₹150–300</div>
+      <div class="tgt-budget">ad budget: ₹15–25k/mo</div>
+      <div class="tgt-retention" style="background:var(--earth2);color:var(--earth)">retention: high</div>
+    </div>
+    <div class="tgt-card">
+      <div class="tgt-rank">⭐⭐</div>
+      <div class="tgt-name">D2C Brands (Wellness/Beauty)</div>
+      <div class="tgt-why">Theerthaa is your proof. Growing fast in India. ROAS measurable. WhatsApp automation = repeat orders.</div>
+      <div class="tgt-result">ROAS 2–4× · repeat order rate up 40%</div>
+      <div class="tgt-budget">ad budget: ₹20–50k/mo</div>
+      <div class="tgt-retention" style="background:var(--fire2);color:var(--fire)">retention: medium</div>
+    </div>
+    <div class="tgt-card">
+      <div class="tgt-rank">⭐⭐</div>
+      <div class="tgt-name">Clinics + Hospitals</div>
+      <div class="tgt-why">Always need appointments. Local targeting works brilliantly. High-ticket specialties (dental, skin, ortho) have solid budget.</div>
+      <div class="tgt-result">40–80 appointment inquiries/mo · CPL ₹80–200</div>
+      <div class="tgt-budget">ad budget: ₹10–20k/mo</div>
+      <div class="tgt-retention" style="background:var(--earth2);color:var(--earth)">retention: very high</div>
+    </div>
+    <div class="tgt-card">
+      <div class="tgt-rank">⭐⭐</div>
+      <div class="tgt-name">Exporters + Trading Cos.</div>
+      <div class="tgt-why">Five Elements UK is your proof. Chennai has hundreds. High budgets. International inquiry automation is your edge.</div>
+      <div class="tgt-result">2–5 quality intl. inquiries/mo</div>
+      <div class="tgt-budget">ad budget: ₹20–40k/mo</div>
+      <div class="tgt-retention" style="background:var(--earth2);color:var(--earth)">retention: high</div>
+    </div>
+  </div>
+
+  <hr/>
+  <div class="sec">4 rules that keep clients forever</div>
+  <div class="card">
+    <div class="kill"><span class="ki">1</span><span><strong style="color:var(--t1)">Only take clients with min ₹15k/mo ad budget.</strong> Below this you cannot run enough tests to show results. You get blamed for the budget, not your skill. Walk away from small budgets.</span></div>
+    <div class="kill"><span class="ki">2</span><span><strong style="color:var(--t1)">Set 3-month expectations in writing before month 1.</strong> Month 1 = testing (CPL may be high). Month 2 = optimising. Month 3 = stable and predictable. Clients who know this never panic in month 1.</span></div>
+    <div class="kill"><span class="ki">3</span><span><strong style="color:var(--t1)">Send automated weekly reports every Monday.</strong> Build this once in n8n — zero time after setup. Client sees you working even when you're not. Kills 50% of churn.</span></div>
+    <div class="kill"><span class="ki">4</span><span><strong style="color:var(--t1)">Call them before they call you.</strong> If results dip in week 3, call in week 2. "I noticed CPL rising, here's what I'm testing." This one habit makes you different from every agency they've used.</span></div>
+  </div>
+
+  <hr/>
+  <div class="sec">indian market benchmarks 2026</div>
+  <div class="card">
+    <div class="rev-row"><span>Real estate CPL (quality leads)</span><span>₹600–1,300</span></div>
+    <div class="rev-row"><span>Coaching institute CPL</span><span>₹150–300</span></div>
+    <div class="rev-row"><span>Local services CPL (salons, clinics)</span><span>₹80–200</span></div>
+    <div class="rev-row"><span>D2C e-commerce ROAS</span><span>2–4× achievable</span></div>
+    <div class="rev-row"><span>WhatsApp reply speed (industry avg)</span><span>4–24 hrs</span></div>
+    <div class="rev-row"><span>WhatsApp reply speed (your system)</span><span style="color:var(--earth)">90 seconds ✓</span></div>
+    <div class="rev-row"><span>Conversion lift from 90-sec follow-up</span><span style="color:var(--earth)">2–3× more closures</span></div>
+    <div class="rev-row"><span>Avg SMM agency price in India</span><span>₹8,000–12,000/mo</span></div>
+    <div class="rev-row"><span>Your SMM price (more value)</span><span style="color:var(--earth)">₹15,000/mo ✓</span></div>
+    <div class="rev-row"><span>Avg client lifetime with automation</span><span>10–16 months</span></div>
+  </div>
+
+</div>
+
+<!-- ═══ AI AGENTS ═══ -->
+<div class="view" id="view-agents">
+  <div class="sec">build once. sell to many. earn forever.</div>
+  <div id="agents-list"></div>
+  <hr/>
+  <div class="sec">why ai agents are your best leverage</div>
+  <div class="card">
+    <div class="rev-row"><span>WhatsApp Lead Bot × 20 clients</span><span>₹1.6L/mo</span></div>
+    <div class="rev-row"><span>Reporting Agent × 15 clients</span><span>₹75k/mo</span></div>
+    <div class="rev-row"><span>Lead Qualifier Agent × 10 clients</span><span>₹60k/mo</span></div>
+    <div class="rev-row"><span>Time spent maintaining all 3</span><span>~4 hrs/week</span></div>
+    <div class="rev-row"><span>Total passive recurring</span><span style="color:var(--earth)">₹2.95L/mo</span></div>
+  </div>
+  <div class="sec" style="margin-top:16px">how to build + sell (you already have all the tools)</div>
+  <div class="card">
+    <div class="rev-row"><span>Build with</span><span>n8n + Claude API + WhatsApp</span></div>
+    <div class="rev-row"><span>Sell on</span><span>Gumroad · direct · LinkedIn</span></div>
+    <div class="rev-row"><span>Price</span><span>₹25–40k setup + ₹6–10k/mo</span></div>
+    <div class="rev-row"><span>Support time per client</span><span>&lt; 30 min/month</span></div>
+    <div class="rev-row"><span>Yes, I can help you build them</span><span>✅ start any time</span></div>
+  </div>
+</div>
+
+<!-- ═══ BRAND ═══ -->
+<div class="view" id="view-brand">
+  <div class="sec">personal brand metrics — update weekly</div>
+  <div class="brand-grid" id="brand-metrics"></div>
+  <hr/>
+  <div class="sec">content stack — heygen + elevenlabs system</div>
+  <div class="card">
+    <div class="rev-row"><span>Record real face video (1 hr)</span><span>→ 4 long videos</span></div>
+    <div class="rev-row"><span>HeyGen avatar renders each</span><span>→ 4 avatar videos</span></div>
+    <div class="rev-row"><span>Repurpose each into shorts</span><span>→ 20 reels/shorts</span></div>
+    <div class="rev-row"><span>ElevenLabs audio for audio posts</span><span>→ 8 audio clips</span></div>
+    <div class="rev-row"><span>Total content from 1 hr recording</span><span style="color:var(--earth)">32+ pieces ✅</span></div>
+  </div>
+  <hr/>
+  <div class="sec">tool stack — set up in order</div>
+  <div class="tools-grid" id="tools-list"></div>
+  <hr/>
+  <div class="sec">monetisation unlock timeline</div>
+  <div class="card">
+    <div class="rev-row"><span>Month 4–6 · brand starts</span><span>inbound leads begin</span></div>
+    <div class="rev-row"><span>Month 7 · 5k+ followers</span><span>first brand deal pitch</span></div>
+    <div class="rev-row"><span>Month 8 · course launch</span><span>₹50k–1L first month</span></div>
+    <div class="rev-row"><span>Month 10 · 15k+ followers</span><span>₹25–75k brand deals</span></div>
+    <div class="rev-row"><span>Month 12 · YouTube 1k subs</span><span>monetisation unlocks</span></div>
+  </div>
+</div>
+
+<!-- ═══ PLAN ═══ -->
+<div class="view" id="view-plan">
+  <div style="margin-bottom:10px"><span class="badge bf" style="margin-right:8px">🇮🇳 dom</span><span class="badge bw2" style="margin-right:8px">🌍 intl</span><span class="badge be" style="margin-right:8px">🤖 agent</span><span class="badge ba">🎬 brand</span></div>
+  <div id="tasks-p1-hd" class="phase-hd" style="margin-top:8px"><span class="badge bf">phase 1 · mo 1–3</span><span class="phase-name" style="margin-left:10px">cash machine</span></div>
+  <div class="card" id="tasks-p1"></div>
+  <div class="phase-hd"><span class="badge bw2">phase 2 · mo 4–6</span><span class="phase-name" style="margin-left:10px">asset layer</span></div>
+  <div class="card" id="tasks-p2"></div>
+  <div class="phase-hd"><span class="badge be">phase 3 · mo 7–9</span><span class="phase-name" style="margin-left:10px">brand + products</span></div>
+  <div class="card" id="tasks-p3"></div>
+  <div class="phase-hd"><span class="badge ba">phase 4 · mo 10–12</span><span class="phase-name" style="margin-left:10px">full stack empire</span></div>
+  <div class="card" id="tasks-p4"></div>
+</div>
+
+<!-- ═══ ROUTINE ═══ -->
+<div class="view" id="view-routine">
+
+  <!-- REALITY CHECK -->
+  <div class="sec">the honest truth — read this first</div>
+  <div class="rc-grid">
+    <div class="rc-card honest">
+      <div class="rc-title" style="color:var(--earth)">HIGH CONFIDENCE TARGET</div>
+      <div class="rc-num" style="color:var(--earth)">₹3.5–4L</div>
+      <div class="rc-sub">per month by month 12<br>achievable if routine is followed 5 days/week and sequencing is respected — services first, then build</div>
+    </div>
+    <div class="rc-card stretch">
+      <div class="rc-title" style="color:var(--ash)">STRETCH TARGET</div>
+      <div class="rc-num" style="color:var(--ash)">₹5L+</div>
+      <div class="rc-sub">per month by month 12<br>possible only if: 3 intl. clients close by month 3, agents sell well from month 6, and course launches month 8</div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="sec" style="margin-bottom:10px">what the data actually says</div>
+    <div class="rc-row"><span class="rc-ico">✅</span><span><strong style="color:var(--earth)">Achievable:</strong> ₹2–2.5L/month from services by month 3 if you close 4–5 clients consistently. This part is the most proven, most controlled, most certain.</span></div>
+    <div class="rc-row"><span class="rc-ico">✅</span><span><strong style="color:var(--earth)">Achievable:</strong> First international client within 60–75 days (not 40) is realistic. 40 days is possible but only if outreach starts day 1 and hits daily numbers every single day.</span></div>
+    <div class="rc-row"><span class="rc-ico">✅</span><span><strong style="color:var(--earth)">Achievable:</strong> AI agents at ₹75k–1L/month by month 9 if you build and market consistently from month 4.</span></div>
+    <div class="rc-row"><span class="rc-ico">⚠️</span><span><strong style="color:var(--fire)">Uncertain:</strong> Course income ₹1L/month requires an audience that takes 6–9 months to build. Month 8 launch is realistic but first month sales will be modest — ₹20–40k, growing over time.</span></div>
+    <div class="rc-row"><span class="rc-ico">⚠️</span><span><strong style="color:var(--fire)">Uncertain:</strong> Brand deals come only after consistent content for 6+ months AND 5k+ engaged followers. Cannot be forced or rushed.</span></div>
+    <div class="rc-row"><span class="rc-ico">❌</span><span><strong style="color:var(--red)">False hope:</strong> ₹5L in month 3 or 4. Not going to happen. Anyone who tells you this is selling a course. Month 12 at best.</span></div>
+    <div class="rc-row"><span class="rc-ico">❌</span><span><strong style="color:var(--red)">False hope:</strong> Doing all 6 streams from month 1. This is the fastest path to doing nothing well. One stream at a time. Period.</span></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="sec" style="margin-bottom:10px">the 4 things that will make or break this</div>
+    <div class="rc-row"><span class="rc-ico">1️⃣</span><span><strong style="color:var(--t1)">Routine consistency over 90 days.</strong> The first 3 months set everything. Miss your outreach targets even 3 days/week and the funnel breaks. This is the single biggest variable.</span></div>
+    <div class="rc-row"><span class="rc-ico">2️⃣</span><span><strong style="color:var(--t1)">Minimum ₹20k domestic / $1,000 intl. pricing.</strong> One cheap client destroys your time budget. You have 6 hours/day. Price protects that.</span></div>
+    <div class="rc-row"><span class="rc-ico">3️⃣</span><span><strong style="color:var(--t1)">Phase sequencing.</strong> Services before agents before brand before courses. Jumping to courses in month 2 with no audience = zero sales and wasted time.</span></div>
+    <div class="rc-row"><span class="rc-ico">4️⃣</span><span><strong style="color:var(--t1)">Protecting personal time.</strong> Burnout at month 4 ends everything. The routine below is designed so you can do this for 12 months without breaking.</span></div>
+  </div>
+
+  <hr/>
+
+  <!-- DAILY ROUTINE TIMELINE -->
+  <div class="sec">your daily routine — mon to fri · 6 focused hours</div>
+  <div class="timeline">
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">5:45</div><div class="tl-dot" style="background:var(--t3)"></div><div class="tl-line" style="background:var(--t3)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label" style="color:var(--t3)">Wake up — no phone for 15 min</div><div class="tl-desc">Water. Light stretch or walk. Let your brain wake up before inputs hit it. This 15 minutes decides the quality of your whole day.</div><div class="tl-dur">15 min · non-negotiable pre-work ritual</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">6:00</div><div class="tl-dot" style="background:var(--fire)"></div><div class="tl-line" style="background:var(--fire)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label">🔥 OUTREACH BLOCK 1 — International</div><div class="tl-desc">30 LinkedIn connection requests to UAE/AU/UK/US founders. Reply to all connections from yesterday with the audit hook message. Log in platform counter above. This is the seed of every future international client.</div><div class="tl-dur">30 min · 🌍 international pipeline · most important 30 min of your day</div><div class="tl-why">why this first: international founders are in their morning when you send. response rate is 2× higher.</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">6:30</div><div class="tl-dot" style="background:var(--ember)"></div><div class="tl-line" style="background:var(--ember)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label">🔥 OUTREACH BLOCK 2 — All Channels</div><div class="tl-desc">3 Upwork proposals (fresh jobs only — posted within 24 hrs). 15 personalised cold emails via Apollo. 20 domestic DMs. Follow up every lead silent for 48+ hrs with a one-line nudge. Log everything.</div><div class="tl-dur">1 hour · 🇮🇳+🌍 full outreach · do not multitask during this</div><div class="tl-why">why: follow-up #3 is where 80% of deals actually close. most people stop at 1.</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">7:30</div><div class="tl-dot" style="background:var(--ash)"></div><div class="tl-line" style="background:var(--ash)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label">☕ SHORT BREAK — 15 min only</div><div class="tl-desc">Coffee. Small breakfast. Step outside briefly. No scrolling, no news, no WhatsApp. You are between two serious work blocks.</div><div class="tl-dur">15 min · physical reset · hard stop at 15 min</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">7:45</div><div class="tl-dot" style="background:var(--water)"></div><div class="tl-line" style="background:var(--water)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label">🎯 DEEP WORK — Client Delivery</div><div class="tl-desc">Meta campaign management, n8n workflow builds, client reporting, WhatsApp automation. No calls during this block. Phone on silent. This is where you earn your retainers. Full focus = 2 hrs work done in 1.5 hrs.</div><div class="tl-dur">2 hours · revenue-producing · zero interruptions</div><div class="tl-why">why deep work early: your peak cognitive hours are morning. use them for clients, not admin.</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">9:45</div><div class="tl-dot" style="background:var(--earth)"></div><div class="tl-line" style="background:var(--earth)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label">🤖 ASSET BLOCK — Build Future Income</div><div class="tl-desc"><strong>Mon/Wed/Fri (months 1–3):</strong> Study + build n8n AI agent (WhatsApp bot, reporting agent). <strong>Tue/Thu:</strong> Write HeyGen avatar scripts, or record real face content. From month 4, this block produces income. Before month 4, it's planting seeds.</div><div class="tl-dur">1 hour · asset building · alternates between agents + content</div><div class="tl-why">why 1 hour only: consistency over intensity. 1 hour/day for 90 days &gt; 10 hours once a week.</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">10:45</div><div class="tl-dot" style="background:var(--fire)"></div><div class="tl-line" style="background:var(--fire)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label">📞 CALLS + ADMIN BLOCK</div><div class="tl-desc">Discovery calls, client check-ins, invoicing via Wise, Calendly management, Deel contracts. Schedule all calls in this window only — never before 10:45. This protects your deep work and outreach blocks from interruption.</div><div class="tl-dur">1 hour · revenue admin · all calls in this window</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">11:45</div><div class="tl-dot" style="background:var(--earth)"></div><div class="tl-line" style="background:var(--earth)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label">📱 CONTENT POST — 1 piece daily</div><div class="tl-desc">Publish today's LinkedIn or Instagram post. Use pre-written scripts or HeyGen avatar video. Takes 10–15 min if content was created in asset block. Do not write from scratch now — just publish what's ready. Engage with 5–10 comments for 15 min.</div><div class="tl-dur">30 min · brand building · batching content = less stress</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time personal">12:15</div><div class="tl-dot" style="background:var(--earth)"></div><div class="tl-line" style="background:var(--earth)"></div></div>
+      <div class="tl-right"><div class="tl-card personal-card"><div class="tl-label personal">🌿 PERSONAL TIME BEGINS — FULLY OFF</div><div class="tl-desc" style="color:var(--earth)">Lunch. Gym. Family time. Rest. Walk. Nap. Whatever recharges you. Zero work guilt. The systems you built run without you. This time is not a reward — it is part of the strategy. Burnout ends everything.</div><div class="tl-dur">12:15 PM to 5:30 PM · yours completely · no checking DMs</div><div class="tl-why" style="border-color:var(--earth);background:rgba(76,175,125,.08);color:var(--earth)">creativity, new ideas, and energy all come from rest. your best client ideas will arrive at lunch, not at the desk.</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time">5:30</div><div class="tl-dot" style="background:var(--t3)"></div><div class="tl-line" style="background:var(--t3)"></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label off">📊 EVENING CHECK — 20 min only</div><div class="tl-desc">Check DMs and emails once. Nudge any lead silent 48+ hrs. Update funnel counters in dashboard. Review tomorrow's outreach list. Set Calendly for tomorrow's calls. Then close all apps.</div><div class="tl-dur">20 min maximum · hard stop · do not let this bleed into evening</div></div></div>
+    </div>
+
+    <div class="tl-block">
+      <div class="tl-left"><div class="tl-time off">6 PM+</div><div class="tl-dot" style="background:var(--t3)"></div></div>
+      <div class="tl-right"><div class="tl-card off-card"><div class="tl-label off">🌙 EVENING — Fully Off</div><div class="tl-desc" style="color:var(--t3)">Family, food, entertainment, rest. No work talk. No checking revenue. No planning. Let the subconscious process the day. Sleep by 10:30 PM — your 6:00 AM start requires it.</div><div class="tl-dur">rest · sleep by 10:30 PM · protects tomorrow's output</div></div></div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- WEEKLY RHYTHM -->
+  <div class="sec">weekly rhythm — same structure every week</div>
+  <div class="week-grid">
+    <div class="day-col"><div class="day-name">MON</div><div class="day-focus">Full routine + set week targets</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col"><div class="day-name">TUE</div><div class="day-focus">Full routine + content creation</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col"><div class="day-name">WED</div><div class="day-focus">Full routine + weekly review 30min</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col"><div class="day-name">THU</div><div class="day-focus">Full routine + invoice all clients</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col"><div class="day-name">FRI</div><div class="day-focus">Full routine + plan next week</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col rest"><div class="day-name" style="color:var(--earth)">SAT</div><div class="day-focus" style="color:var(--earth)">Content batch only. No outreach. No delivery.</div><div class="day-hours earth">2h</div></div>
+    <div class="day-col rest"><div class="day-name" style="color:var(--earth)">SUN</div><div class="day-focus" style="color:var(--earth)">Complete rest. Zero work. Non-negotiable.</div><div class="day-hours gray">0h</div></div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="rc-row"><span class="rc-ico">📅</span><span><strong style="color:var(--t1)">Saturday only:</strong> 2 hrs of content batching — write 5 LinkedIn posts, record 1 HeyGen video, schedule all next week's posts. This is why you can post daily without daily effort.</span></div>
+    <div class="rc-row"><span class="rc-ico">🌿</span><span><strong style="color:var(--earth)">Sunday is sacred:</strong> Your competitors work 7 days and burn out at month 4. You rest Sunday and run for 12 months. Sunday is a competitive advantage, not laziness.</span></div>
+    <div class="rc-row"><span class="rc-ico">📊</span><span><strong style="color:var(--t1)">Wednesday 30-min review:</strong> Check what's working in outreach. Which DM script got most replies this week? Which client is taking too much time? Adjust and move on.</span></div>
+  </div>
+
+  <!-- MONTHLY FOCUS -->
+  <div class="sec">monthly focus — what to prioritise each month</div>
+  <div class="mf-grid">
+    <div class="mf-card"><div class="mf-months" style="color:var(--fire)">months 1–3</div><div class="mf-focus">Close clients only</div><div class="mf-item"><span class="mf-dot" style="background:var(--fire)"></span>Outreach: full volume daily</div><div class="mf-item"><span class="mf-dot" style="background:var(--fire)"></span>Deliver: results in 14 days</div><div class="mf-item"><span class="mf-dot" style="background:var(--fire)"></span>Ignore: agents, brand, course</div><div class="mf-item"><span class="mf-dot" style="background:var(--fire)"></span>Goal: ₹2.5L/mo by month 3</div></div>
+    <div class="mf-card"><div class="mf-months" style="color:var(--water)">months 4–6</div><div class="mf-focus">Build agent + brand</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>Build: 2 n8n agents</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>Launch: HeyGen avatar</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>Post: daily content starts</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>Goal: ₹3–3.5L/mo</div></div>
+    <div class="mf-card"><div class="mf-months" style="color:var(--earth)">months 7–9</div><div class="mf-focus">Course + brand growth</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Launch: first course</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Grow: 5k LinkedIn followers</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Pitch: first brand deals</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Goal: ₹3.5–4L/mo</div></div>
+    <div class="mf-card"><div class="mf-months" style="color:var(--ash)">months 10–12</div><div class="mf-focus">Scale all streams</div><div class="mf-item"><span class="mf-dot" style="background:var(--ash)"></span>All 6 streams active</div><div class="mf-item"><span class="mf-dot" style="background:var(--ash)"></span>Reduce cold outreach</div><div class="mf-item"><span class="mf-dot" style="background:var(--ash)"></span>Inbound doing the work</div><div class="mf-item"><span class="mf-dot" style="background:var(--ash)"></span>Goal: ₹4–5.5L/mo</div></div>
+  </div>
+
+  <hr/>
+
+  <!-- HABIT TRACKER -->
+  <div class="sec">21-day habit streak tracker — mark each day you follow the routine</div>
+  <div class="card" id="habit-tracker"></div>
+
+</div>
+
+<script>
+const TASKS={
+  p1:[
+    {id:'t01',text:'Close 3 domestic retainers — Tier 1 (₹20k) + 2×Tier 2 (₹45k)',note:'audit hook outreach · loom demo · case study close',tags:['dom']},
+    {id:'t02',text:'Close 2 international retainers at $1,000–1,500/month',note:'LinkedIn UAE/AU/UK + Upwork · present in USD only',tags:['intl']},
+    {id:'t03',text:'Set up Wise + Payoneer + Deel accounts today',note:'30 min · must be ready before first intl. client',tags:['intl']},
+    {id:'t04',text:'Rewrite LinkedIn: "AI Marketing Automation · Meta Ads + n8n"',note:'no country in headline · lead with what you do',tags:['intl']},
+    {id:'t05',text:'Create Upwork profile — niche only · $40/hr minimum',note:'"Meta Ads + AI Automation for E-commerce" — nothing else',tags:['intl']},
+    {id:'t06',text:'Build Apollo.io list of 300 UAE/AU/UK/US founders',note:'filter: founder/ceo · 10–200 employees · e-commerce/coaching',tags:['intl']},
+    {id:'t07',text:'Record case study loom + 90-sec automation demo',note:'your best sales tools · neutral english narration',tags:['dom','intl']},
+    {id:'t08',text:'Deliver insane results to all 5 clients within 14 days',note:'fast delivery = referrals + case studies for brand',tags:['dom','intl']},
+  ],
+  p2:[
+    {id:'t09',text:'Build WhatsApp Lead Bot agent on n8n',note:'sell at ₹30k setup + ₹8k/mo · build once · sell to 20 clients',tags:['agent']},
+    {id:'t10',text:'Build Meta Ads Reporting Agent',note:'auto weekly reports · bundle into retainer or ₹5k/mo standalone',tags:['agent']},
+    {id:'t11',text:'Create HeyGen AI avatar — record 10-min real face video first',note:'use this to generate 30 days of content automatically',tags:['brand']},
+    {id:'t12',text:'Clone voice on ElevenLabs',note:'use for audio posts + avatar narration',tags:['brand']},
+    {id:'t13',text:'Start daily LinkedIn + Instagram posting with avatar content',note:'1 real recording = 30+ pieces of content',tags:['brand']},
+    {id:'t14',text:'Add 1 more intl. client — now at $3,000/mo USD',note:'pipeline should have warm leads from phase 1 outreach',tags:['intl']},
+    {id:'t15',text:'Ask all phase 1 clients for 1 warm referral each',note:'warm intros close at 80% · best source for new clients',tags:['dom','intl']},
+  ],
+  p3:[
+    {id:'t16',text:'Launch Meta Ads + AI Automation course — Tamil + English',note:'₹5,000–8,000 price · target 30 students/month · Gumroad or Teachable',tags:['brand']},
+    {id:'t17',text:'Grow to 5,000+ LinkedIn followers',note:'consistent daily avatar content · engagement beats follower count',tags:['brand']},
+    {id:'t18',text:'Pitch first brand deals to AI tools — Apollo, n8n, HeyGen, Instantly',note:'email their partnerships team · show engagement + niche audience',tags:['brand']},
+    {id:'t19',text:'Scale AI agents to 15+ subscriptions',note:'now ₹1L+/mo passive · less than 4 hrs/week to maintain',tags:['agent']},
+    {id:'t20',text:'Reduce cold outreach by 50% — inbound replacing it',note:'your content + personal brand should be generating 2–3 leads/month',tags:['brand','intl']},
+    {id:'t21',text:'Build Lead Qualifier Agent — 3rd agent product',note:'qualify leads before calls · sell to service businesses',tags:['agent']},
+  ],
+  p4:[
+    {id:'t22',text:'All 6 revenue streams active — services + agents + course + brand deals + YT + content',note:'this is the goal. you built it.',tags:['dom','intl','agent','brand']},
+    {id:'t23',text:'Scale AI agents to 25+ subscriptions = ₹1.5–2L/mo passive',note:'zero extra work · just maintain what works',tags:['agent']},
+    {id:'t24',text:'Launch course cohort 2 with testimonials + case studies',note:'social proof from cohort 1 makes cohort 2 sell itself',tags:['brand']},
+    {id:'t25',text:'Hire a part-time VA or editor — ₹15–20k/mo',note:'removes the last manual tasks from your plate',tags:['dom','intl']},
+    {id:'t26',text:'Calculate total ARR — confirm ₹5L+/month',note:'verify all 6 streams. celebrate properly.',tags:['dom','intl','agent','brand']},
+    {id:'t27',text:'Document everything for scale — SOPs, onboarding, templates',note:'you are now a media company + agency + SaaS business',tags:['dom','intl','agent','brand']},
+  ],
+};
+
+const DAILY=[
+  {id:'d1',lbl:'30 LinkedIn intl. requests + reply connections with audit hook',note:'6:30 AM · 30 min · most important 30 minutes of your day'},
+  {id:'d2',lbl:'3 Upwork proposals + 15 cold emails + 20 domestic DMs',note:'7:00 AM · 1 hour · outreach block — do not skip'},
+  {id:'d3',lbl:'Client delivery — Meta campaigns, n8n, reporting',note:'8:00 AM · 2 hours · protected deep work block'},
+  {id:'d4',lbl:'AI agent building OR HeyGen content (alternate days)',note:'10:00 AM · 1 hour · future income building'},
+  {id:'d5',lbl:'Calls + admin + follow-ups + Calendly + invoicing',note:'11:00 AM · 1 hour · revenue admin'},
+  {id:'d6',lbl:'Personal time starts. Systems run without you.',note:'12:00 PM onwards · gym · family · rest · protected'},
+];
+
+const STREAMS=[
+  {id:'s1',ico:'📣',name:'Services — Domestic',type:'client retainer · monthly',cls:'c1',target:100000,targetLabel:'₹1L/mo',phase:'month 1',currency:'inr',placeholder:'monthly INR'},
+  {id:'s2',ico:'🌍',name:'Services — International',type:'client retainer · USD · monthly',cls:'c2',target:165000,targetLabel:'₹1.65L/mo',phase:'month 1',currency:'usd',placeholder:'monthly USD'},
+  {id:'s3',ico:'🤖',name:'AI Agent Subscriptions',type:'productized saas · recurring passive',cls:'c4',target:150000,targetLabel:'₹1.5L/mo',phase:'month 4',currency:'inr',placeholder:'monthly INR'},
+  {id:'s4',ico:'🎓',name:'Course + Digital Products',type:'gumroad · teachable · cohort',cls:'c3',target:100000,targetLabel:'₹1L/mo',phase:'month 7',currency:'inr',placeholder:'monthly INR'},
+  {id:'s5',ico:'🤝',name:'Brand Deals',type:'sponsored content · ai saas tools',cls:'c5',target:75000,targetLabel:'₹75k/mo',phase:'month 10',currency:'inr',placeholder:'monthly INR'},
+  {id:'s6',ico:'▶️',name:'Content Ad Revenue',type:'youtube · instagram reels · compounding',cls:'c6',target:25000,targetLabel:'₹25k/mo',phase:'month 10',currency:'inr',placeholder:'monthly INR'},
+];
+
+const AGENTS=[
+  {id:'a1',name:'WhatsApp Lead Bot',tech:'n8n + WhatsApp Business API',setup:'₹30k setup',monthly:'₹8k/mo',monthlyVal:8000,max:20,desc:'Captures, qualifies, and follows up leads automatically via WhatsApp. Your most sellable agent — every Indian SME wants this.'},
+  {id:'a2',name:'Meta Ads Reporting Agent',tech:'n8n + Meta API + Claude',setup:'₹10k setup or bundle',monthly:'₹5k/mo',monthlyVal:5000,max:30,desc:'Auto-generates weekly performance reports with insights. Bundle into retainer or sell standalone. Effortless to maintain.'},
+  {id:'a3',name:'Lead Qualifier Agent',tech:'n8n + Claude API + Typeform',setup:'₹25k setup',monthly:'₹6k/mo',monthlyVal:6000,max:20,desc:'Qualifies inbound leads via conversational flow before human call. Saves 10+ hours/week for any sales-heavy business.'},
+];
+
+const BRAND_METRICS=[
+  {id:'bm1',ico:'💼',plat:'LinkedIn',goal:'5k followers · mo 7'},
+  {id:'bm2',ico:'📸',plat:'Instagram',goal:'3k followers · mo 7'},
+  {id:'bm3',ico:'▶️',plat:'YouTube',goal:'1k subs · mo 10'},
+  {id:'bm4',ico:'📧',plat:'Email List',goal:'500 subs · mo 7'},
+];
+
+const TOOLS=[
+  {id:'tl1',ico:'🎬',name:'HeyGen',use:'AI avatar videos · personal brand'},
+  {id:'tl2',ico:'🔊',name:'ElevenLabs',use:'voice cloning · audio content'},
+  {id:'tl3',ico:'⚡',name:'n8n',use:'automation + AI agent builds'},
+  {id:'tl4',ico:'🔍',name:'Apollo.io',use:'intl. lead prospecting + email'},
+  {id:'tl5',ico:'💸',name:'Wise',use:'receive USD at best rates'},
+  {id:'tl6',ico:'📄',name:'Deel',use:'intl. contracts + payments'},
+  {id:'tl7',ico:'📅',name:'Calendly',use:'auto-book discovery calls'},
+  {id:'tl8',ico:'🎓',name:'Gumroad',use:'sell courses + digital products'},
+];
+
+const SC=['prospect','call','closed','lost'];
+const SL={prospect:'prospect',call:'call booked',closed:'closed ✓',lost:'lost'};
+const SS={prospect:'s-p',call:'s-c',closed:'s-x',lost:'s-l'};
+const TAG={dom:'<span class="ttag td">🇮🇳 dom</span>',intl:'<span class="ttag ti">🌍 intl</span>',agent:'<span class="ttag tag">🤖 agent</span>',brand:'<span class="ttag tb">🎬 brand</span>'};
+
+let st=JSON.parse(localStorage.getItem('empire_v1')||'null')||{
+  checked:{},clients:[],daily:{},
+  funnel:{out:0,conv:0,call:0,close:0},
+  today:{date:'',li:0,uw:0,ce:0,dm:0},
+  streams:{},agents:{},brand:{},tools:{}
+};
+function save(){localStorage.setItem('empire_v1',JSON.stringify(st))}
+
+// Days — using local date comparison to avoid IST/UTC timezone bug
+const NOW=new Date();
+const _today=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()); // local midnight today
+const _start=new Date(2026,4,26); // May 26 2026 local midnight — month is 0-indexed
+const _diff=Math.floor((_today-_start)/86400000); // exact whole days
+const d60=Math.max(0,Math.min(60,_diff+1));
+const d40=Math.max(0,Math.min(40,_diff+1));
+document.getElementById('h-d60').textContent=d60===0?'0':d60;
+document.getElementById('h-d40').textContent=d40===0?'0':d40;
+if(d60===0){
+  const lbl=document.querySelector('#h-d60 + .hs-l');
+  if(lbl)lbl.textContent='prep day · routine starts tomorrow';
+}
+
+// Tasks
+function renderTasks(cid,tasks){
+  document.getElementById(cid).innerHTML=tasks.map(t=>`
+    <div class="task">
+      <input type="checkbox" id="${t.id}" ${st.checked[t.id]?'checked':''} onchange="chkTask('${t.id}')">
+      <div><div>${(t.tags||[]).map(x=>TAG[x]||'').join('')}</div>
+      <div class="tm ${st.checked[t.id]?'done':''}" id="tx-${t.id}">${t.text}</div>
+      <div class="tn">${t.note}</div></div>
+    </div>`).join('');
+}
+function chkTask(id){
+  st.checked[id]=!st.checked[id];
+  const el=document.getElementById('tx-'+id);
+  if(el)el.className='tm'+(st.checked[id]?' done':'');
+  save();updateSummary();
+}
+
+// Daily
+function renderDaily(){
+  const today=new Date().toDateString();
+  document.getElementById('daily-chks').innerHTML=DAILY.map(d=>{
+    const k=today+d.id,on=!!st.daily[k];
+    return`<div class="daily-row">
+      <div class="d-chk ${on?'on':''}" onclick="chkD('${k}',this)">${on?'✓':''}</div>
+      <div><div class="d-lbl">${d.lbl}</div><div class="d-note">${d.note}</div></div>
+    </div>`;
+  }).join('');
+}
+function chkD(k,el){
+  st.daily[k]=!st.daily[k];
+  el.classList.toggle('on');
+  el.textContent=st.daily[k]?'✓':'';
+  save();
+}
+
+// Platform counters
+function bump(p,d){
+  const today=new Date().toDateString();
+  if(st.today.date!==today)st.today={date:today,li:0,uw:0,ce:0,dm:0};
+  st.today[p]=Math.max(0,(st.today[p]||0)+d);
+  document.getElementById('pc-'+p).textContent=st.today[p];
+  if(d>0)st.funnel.out=(st.funnel.out||0)+1;
+  updateFunnel();save();
+}
+function restorePlatform(){
+  const today=new Date().toDateString();
+  if(st.today&&st.today.date===today){
+    ['li','uw','ce','dm'].forEach(p=>{
+      const el=document.getElementById('pc-'+p);
+      if(el)el.textContent=st.today[p]||0;
+    });
+  }
+}
+
+// Funnel — full bidirectional control
+function bumpF(k,dir){
+  dir=dir||1;
+  if(k==='out') st.funnel.out=Math.max(0,(st.funnel.out||0)+dir);
+  if(k==='conv')st.funnel.conv=Math.max(0,(st.funnel.conv||0)+dir);
+  if(k==='call')st.funnel.call=Math.max(0,(st.funnel.call||0)+dir);
+  if(k==='close')st.funnel.close=Math.max(0,(st.funnel.close||0)+dir);
+  updateFunnel();save();updateSummary();
+}
+function resetFunnel(){
+  if(!confirm('Reset all funnel counts to zero?'))return;
+  st.funnel={out:0,conv:0,call:0,close:0};
+  updateFunnel();save();updateSummary();
+}
+function updateFunnel(){
+  document.getElementById('f-out').textContent=(st.funnel.out||0).toLocaleString();
+  document.getElementById('f-conv').textContent=st.funnel.conv||0;
+  document.getElementById('f-call').textContent=st.funnel.call||0;
+  document.getElementById('f-close').textContent=st.funnel.close||0;
+  document.getElementById('m-funnel').textContent=(st.funnel.conv||0)+'→'+(st.funnel.call||0)+'→'+(st.funnel.close||0);
+}
+
+// Streams
+function renderStreams(){
+  document.getElementById('streams-grid').innerHTML=STREAMS.map(s=>`
+    <div class="rs-card ${s.cls}">
+      <div class="rs-ico">${s.ico}</div>
+      <div class="rs-name">${s.name}</div>
+      <div class="rs-type">${s.type}</div>
+      <div class="rs-target">${s.targetLabel}</div>
+      <div class="rs-month">unlocks: ${s.phase}</div>
+      <div class="rs-current">
+        <span class="rs-cur-lbl">current ${s.currency==='usd'?'USD':'INR'}</span>
+        <span class="rs-cur-val" id="sv-${s.id}">${s.currency==='usd'?'$':'₹'}${(st.streams[s.id]||0).toLocaleString()}</span>
+      </div>
+      <div class="bw" style="margin:6px 0"><div class="bar ${s.cls==='c1'?'f':s.cls==='c2'?'w':s.cls==='c4'?'a':'e'}" id="sb-${s.id}" style="width:${Math.min(100,Math.round((st.streams[s.id]||0)/s.target*100))}%"></div></div>
+      <input class="rs-input" type="number" placeholder="${s.placeholder}" value="${st.streams[s.id]||''}" oninput="updateStream('${s.id}','${s.currency}',${s.target},this.value)">
+    </div>`).join('');
+}
+function updateStream(id,cur,target,val){
+  st.streams[id]=parseFloat(val)||0;
+  const inrVal=cur==='usd'?Math.round(st.streams[id]*83):st.streams[id];
+  const pct=Math.min(100,Math.round(st.streams[id]/target*100));
+  const el=document.getElementById('sv-'+id);
+  if(el)el.textContent=(cur==='usd'?'$':'₹')+(st.streams[id]||0).toLocaleString();
+  const bar=document.getElementById('sb-'+id);
+  if(bar)bar.style.width=pct+'%';
+  save();updateSummary();
+}
+
+// Agents
+function renderAgents(){
+  document.getElementById('agents-list').innerHTML=AGENTS.map(a=>{
+    const sold=st.agents[a.id]||0;
+    const pct=Math.round(sold/a.max*100);
+    const income=sold*a.monthlyVal;
+    const incomeStr=income>=100000?'₹'+(income/100000).toFixed(1)+'L/mo':income>=1000?'₹'+(income/1000).toFixed(0)+'k/mo':'₹'+income+'/mo';
+    return`<div class="agent-card ${sold>0?'live':''}">
+      <div class="agent-head">
+        <div><div class="agent-name">${a.name}</div><div class="agent-tech">${a.tech}</div></div>
+        <div class="agent-price"><div class="agent-setup">${a.setup}</div><div class="agent-monthly">${a.monthly}</div></div>
+      </div>
+      <div class="agent-bul">${a.desc}</div>
+      <div class="agent-progress">
+        <span class="agent-sales-lbl">sold:</span>
+        <input class="agent-sales-in" type="number" min="0" max="${a.max}" value="${sold}" oninput="updateAgent('${a.id}',${a.max},this.value)">
+        <span class="agent-sales-max">/ ${a.max}</span>
+        <div class="agent-bar-w"><div class="agent-bar" id="ab-${a.id}" style="width:${pct}%"></div></div>
+      </div>
+      ${sold>0?`<div class="agent-live">📈 earning ${incomeStr} from ${sold} subscription${sold>1?'s':''}</div>`:''}
+    </div>`;
+  }).join('');
+}
+function updateAgent(id,max,val){
+  st.agents[id]=Math.min(max,Math.max(0,parseInt(val)||0));
+  const bar=document.getElementById('ab-'+id);
+  if(bar)bar.style.width=Math.round(st.agents[id]/max*100)+'%';
+  save();renderAgents();updateSummary();
+}
+
+// Brand
+function renderBrand(){
+  document.getElementById('brand-metrics').innerHTML=BRAND_METRICS.map(b=>`
+    <div class="brand-card">
+      <div class="brand-ico">${b.ico}</div>
+      <div class="brand-plat">${b.plat}</div>
+      <div class="brand-count" id="bv-${b.id}">${(st.brand[b.id]||0).toLocaleString()}</div>
+      <input class="brand-in" type="number" placeholder="count" value="${st.brand[b.id]||''}" oninput="updateBrand('${b.id}',this.value)">
+      <div class="brand-goal">${b.goal}</div>
+    </div>`).join('');
+  document.getElementById('tools-list').innerHTML=TOOLS.map(t=>{
+    const on=!!st.tools[t.id];
+    return`<div class="tool-card">
+      <div class="tool-ico">${t.ico}</div>
+      <div><div class="tool-name">${t.name}</div><div class="tool-use">${t.use}</div></div>
+      <div class="tool-check ${on?'on':''}" onclick="toggleTool('${t.id}',this)">${on?'✓':''}</div>
+    </div>`;
+  }).join('');
+}
+function updateBrand(id,val){
+  st.brand[id]=parseInt(val)||0;
+  const el=document.getElementById('bv-'+id);
+  if(el)el.textContent=(st.brand[id]||0).toLocaleString();
+  save();
+}
+function toggleTool(id,el){
+  st.tools[id]=!st.tools[id];
+  el.classList.toggle('on');
+  el.textContent=st.tools[id]?'✓':'';
+  save();
+}
+
+// Clients
+function renderClients(){
+  const el=document.getElementById('client-list');
+  if(!st.clients.length){el.innerHTML='<div style="font-size:13px;color:var(--t3);padding:4px 0">no clients yet — add your first one</div>';return;}
+  el.innerHTML=st.clients.map((c,i)=>`
+    <div class="cl">
+      <input class="cl-in" type="text" placeholder="client name" value="${c.name||''}" oninput="st.clients[${i}].name=this.value;save();">
+      <select class="sel" onchange="st.clients[${i}].svc=this.value;save();">
+        <option ${c.svc==='s1'?'selected':''} value="s1">S1 ₹22k</option>
+        <option ${c.svc==='s2'?'selected':''} value="s2">S2 ₹42k</option>
+        <option ${c.svc==='s3'?'selected':''} value="s3">S3 setup</option>
+      </select>
+      <select class="sel" onchange="st.clients[${i}].niche=this.value;save();">
+        <option ${c.niche==='re'?'selected':''} value="re">🏠 realty</option>
+        <option ${c.niche==='edu'?'selected':''} value="edu">📚 coaching</option>
+        <option ${c.niche==='d2c'?'selected':''} value="d2c">🛍 d2c</option>
+        <option ${c.niche==='clinic'?'selected':''} value="clinic">🏥 clinic</option>
+        <option ${c.niche==='exp'?'selected':''} value="exp">🚢 export</option>
+        <option ${c.niche==='other'?'selected':''} value="other">📦 other</option>
+      </select>
+      <select class="sel" onchange="st.clients[${i}].ct=this.value;save();updateSummary();">
+        <option ${c.ct==='dom'?'selected':''} value="dom">🇮🇳</option>
+        <option ${c.ct==='intl'?'selected':''} value="intl">🌍</option>
+      </select>
+      <span class="sp ${SS[c.status]||'s-p'}" onclick="cycleS(${i})">${SL[c.status]||'prospect'}</span>
+      <input class="rv" type="number" placeholder="₹ amt" value="${c.revenue||''}" oninput="st.clients[${i}].revenue=this.value;save();updateSummary();">
+      <button class="delbtn" onclick="delClient(${i})">✕</button>
+    </div>`).join('');
+}
+function cycleS(i){
+  st.clients[i].status=SC[(SC.indexOf(st.clients[i].status||'prospect')+1)%SC.length];
+  save();renderClients();updateSummary();
+}
+function addClient(){st.clients.push({name:'',svc:'s2',niche:'re',status:'prospect',revenue:'',ct:'dom'});save();renderClients();}
+function delClient(i){st.clients.splice(i,1);save();renderClients();updateSummary();}
+
+// Summary
+function updateSummary(){
+  const all=[...TASKS.p1,...TASKS.p2,...TASKS.p3,...TASKS.p4];
+  const done=all.filter(t=>st.checked[t.id]).length;
+  document.getElementById('h-tasks').textContent=done;
+
+  const closed=st.clients.filter(c=>c.status==='closed');
+  document.getElementById('h-clients').textContent=closed.length;
+
+  let inr=0,usd=0;
+  closed.forEach(c=>{const v=parseFloat(c.revenue||0);if(c.ct==='intl')usd+=v;else inr+=v;});
+  const clInr=inr+Math.round(usd*83);
+  const margin=Math.max(0,clInr-20000);
+
+  // Pipeline bar — target ₹1L pure margin (₹1.2L revenue)
+  const clPct=Math.min(100,Math.round(clInr/120000*100));
+  const clBar=document.getElementById('cl-bar');
+  if(clBar)clBar.style.width=clPct+'%';
+  const clLbl=document.getElementById('cl-lbl');
+  if(clLbl)clLbl.textContent='₹'+clInr.toLocaleString('en-IN')+' revenue · ₹'+margin.toLocaleString('en-IN')+' margin ('+clPct+'% to ₹1L goal)';
+
+  // Milestone strip
+  const msRev=document.getElementById('ms-rev');
+  if(msRev)msRev.textContent='₹'+margin.toLocaleString('en-IN');
+  const ms1=document.getElementById('ms-1l-pct');
+  if(ms1)ms1.textContent=Math.min(100,Math.round(margin/100000*100))+'%';
+  const ms3=document.getElementById('ms-3l-pct');
+  if(ms3)ms3.textContent=Math.min(100,Math.round(margin/300000*100))+'%';
+  const ms5=document.getElementById('ms-5l-pct');
+  if(ms5)ms5.textContent=Math.min(100,Math.round(margin/500000*100))+'%';
+
+  // Stream totals
+  let streamTotal=0;
+  STREAMS.forEach(s=>{
+    const v=st.streams[s.id]||0;
+    streamTotal+=s.currency==='usd'?Math.round(v*83):v;
+  });
+  let agentIncome=0;
+  AGENTS.forEach(a=>{agentIncome+=(st.agents[a.id]||0)*a.monthlyVal;});
+  const grandTotal=streamTotal+agentIncome+clInr;
+  const target=550000;
+  const gPct=Math.min(100,Math.round(grandTotal/target*100));
+
+  document.getElementById('m-rev').textContent='₹'+(grandTotal).toLocaleString('en-IN');
+  document.getElementById('m-margin').textContent='₹'+Math.max(0,grandTotal-25000).toLocaleString('en-IN');
+  document.getElementById('m-usd').textContent='$'+usd.toLocaleString();
+  document.getElementById('bar-rev').style.width=gPct+'%';
+  document.getElementById('bar-margin').style.width=Math.min(100,Math.round(Math.max(0,grandTotal-25000)/500000*100))+'%';
+  document.getElementById('bar-usd').style.width=Math.min(100,Math.round(usd/4500*100))+'%';
+
+  const stTotal=document.getElementById('st-total');
+  if(stTotal)stTotal.textContent='₹'+grandTotal.toLocaleString('en-IN');
+  const stSub=document.getElementById('st-sub');
+  if(stSub)stSub.textContent='₹'+grandTotal.toLocaleString('en-IN')+' of ₹5,50,000 · '+gPct+'%';
+  const stBar=document.getElementById('st-bar');
+  if(stBar)stBar.style.width=gPct+'%';
+
+  const totalAgents=Object.values(st.agents||{}).reduce((a,b)=>a+b,0);
+  document.getElementById('h-agents').textContent=totalAgents;
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('view-'+name).classList.add('active');
+}
+
+// ── HABIT TRACKER ──
+const HABITS=[
+  {id:'h1',lbl:'Full routine followed (all 6 blocks)',note:'did you complete every block today?',color:'fire'},
+  {id:'h2',lbl:'Hit outreach targets (30+3+15+20)',note:'all platform numbers reached',color:'fire'},
+  {id:'h3',lbl:'Published 1 piece of content',note:'linkedin, instagram, or youtube',color:'earth'},
+  {id:'h4',lbl:'Personal time protected after 12pm',note:'no work after noon, no guilt',color:'earth'},
+  {id:'h5',lbl:'Asset block done (agent or content)',note:'1 hour of future-income building',color:'water'},
+];
+
+function renderHabits(){
+  const el=document.getElementById('habit-tracker');
+  if(!el)return;
+  const days=21;
+  el.innerHTML=HABITS.map(h=>{
+    const dots=Array.from({length:days},(_,i)=>{
+      const k='habit-'+h.id+'-d'+i;
+      const on=!!(st.habits&&st.habits[k]);
+      return`<div class="hdot${on?' on':''}${on&&h.color==='earth'?' e':''}" onclick="toggleHabit('${k}','${h.color}',this)" title="day ${i+1}"></div>`;
+    }).join('');
+    const streak=calcStreak(h.id,days);
+    return`<div class="habit-row">
+      <div style="flex:1;min-width:0">
+        <div class="habit-label">${h.lbl}</div>
+        <div class="habit-note">${h.note}</div>
+        <div class="habit-dots" style="margin-top:8px">${dots}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:12px">
+        <div class="streak-num">${streak}<span class="streak-fire">${streak>=7?'🔥':streak>=3?'✨':''}</span></div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--t3)">day streak</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleHabit(k,color,el){
+  if(!st.habits)st.habits={};
+  st.habits[k]=!st.habits[k];
+  el.classList.toggle('on');
+  if(color==='earth'){el.classList.toggle('e',st.habits[k]);}
+  save();
+  renderHabits();
+}
+
+function calcStreak(hid,days){
+  if(!st.habits)return 0;
+  let streak=0;
+  for(let i=days-1;i>=0;i--){
+    if(st.habits['habit-'+hid+'-d'+i])streak++;
+    else break;
+  }
+  return streak;
+}
+
+// Init — all constants and functions defined above this line
+renderTasks('tasks-p1',TASKS.p1);renderTasks('tasks-p2',TASKS.p2);
+renderTasks('tasks-p3',TASKS.p3);renderTasks('tasks-p4',TASKS.p4);
+renderClients();renderDaily();renderStreams();renderAgents();renderBrand();
+restorePlatform();updateFunnel();updateSummary();renderHabits();
+
+// ── PWA: Service Worker + Install Banner ──
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+}
+
+// iOS install banner (shows only if not already installed as PWA)
+const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+if(!isStandalone&&!localStorage.getItem('banner_dismissed')){
+  const banner=document.createElement('div');
+  banner.id='install-banner';
+  banner.innerHTML=`
+    <div style="background:linear-gradient(135deg,rgba(245,166,35,.15),rgba(224,92,0,.1));border:1px solid rgba(245,166,35,.3);border-radius:12px;padding:14px 16px;margin:0 0 16px;display:flex;align-items:flex-start;gap:12px;position:relative">
+      <div style="font-size:24px;flex-shrink:0">📲</div>
+      <div style="flex:1">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#f5a623;letter-spacing:.5px;margin-bottom:4px">ADD TO HOME SCREEN</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9a968e;line-height:1.6">Tap <strong style="color:#f0ede4">Share → Add to Home Screen</strong> in Safari to install as an app and enable daily push notifications on your iPhone</div>
+      </div>
+      <button onclick="localStorage.setItem('banner_dismissed','1');document.getElementById('install-banner').remove()" style="background:none;border:none;color:#5c5850;font-size:18px;cursor:pointer;flex-shrink:0;line-height:1">✕</button>
+    </div>`;
+  document.body.insertBefore(banner,document.body.firstChild);
+}
+
+// Request notification permission once installed
+if(isStandalone&&'Notification' in window&&Notification.permission==='default'){
+  setTimeout(()=>Notification.requestPermission(),2000);
+}
+
+
+</script>
+</body>
+</html>

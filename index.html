@@ -442,6 +442,38 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
 .dsc-bar-outer{background:var(--c3);border-radius:20px;height:8px;margin-bottom:10px;overflow:hidden}
 .dsc-bar-inner{height:8px;border-radius:20px;transition:width .5s,background .3s}
 .dsc-msg{font-family:var(--mono);font-size:11px;color:var(--t3);line-height:1.5}
+
+/* ── ACCOUNTABILITY MODAL ── */
+#acc-modal-overlay{position:fixed;inset:0;background:rgba(7,8,10,.85);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .25s ease}
+#acc-modal{background:var(--c1);border:1px solid var(--bd2);border-radius:20px;padding:28px 24px;max-width:420px;width:100%;position:relative;overflow:hidden}
+#acc-modal::before{content:'';position:absolute;top:-80px;right:-80px;width:220px;height:220px;border-radius:50%;pointer-events:none}
+.am-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px}
+.am-title{font-family:var(--display);font-size:clamp(26px,7vw,38px);line-height:1;margin-bottom:10px;letter-spacing:.5px}
+.am-sub{font-size:13px;color:var(--t2);line-height:1.75;margin-bottom:20px}
+.am-stats{display:flex;gap:12px;margin-bottom:22px}
+.am-stat{background:var(--c2);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;flex:1;text-align:center}
+.am-stat-num{font-family:var(--display);font-size:26px;line-height:1}
+.am-stat-lbl{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:3px;letter-spacing:.05em}
+.am-btn-go{width:100%;background:linear-gradient(135deg,var(--fire),var(--ember));border:none;border-radius:12px;font-family:var(--display);font-size:20px;color:#07080a;padding:16px;cursor:pointer;letter-spacing:1px;transition:all .2s;margin-bottom:8px}
+.am-btn-go:hover{opacity:.9;transform:scale(1.01)}
+.am-btn-dismiss{width:100%;background:none;border:1px solid var(--bd);border-radius:12px;font-family:var(--mono);font-size:11px;color:var(--t3);padding:11px;cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.am-btn-dismiss:hover{border-color:var(--t3);color:var(--t2)}
+@keyframes fadeIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+
+/* ── STICKY ACCOUNTABILITY BAR ── */
+#acc-bar{position:fixed;bottom:0;left:0;right:0;z-index:999;background:rgba(7,8,10,.92);backdrop-filter:blur(10px);border-top:1px solid rgba(245,166,35,.2);padding:10px 16px;display:flex;align-items:center;gap:12px;transition:transform .3s}
+#acc-bar.hidden{transform:translateY(100%)}
+.ab-status{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ab-status.pending{background:rgba(245,166,35,.15);border:1.5px solid var(--fire)}
+.ab-status.fire{background:rgba(224,92,0,.15);border:1.5px solid var(--ember)}
+.ab-text{flex:1;min-width:0}
+.ab-title{font-size:12px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ab-sub{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:2px}
+.ab-cta{background:var(--fire);border:none;border-radius:8px;font-family:var(--mono);font-size:10px;font-weight:700;color:#07080a;padding:8px 14px;cursor:pointer;white-space:nowrap;letter-spacing:.04em;transition:all .15s;flex-shrink:0}
+.ab-cta:hover{background:var(--ember)}
+.ab-pct{font-family:var(--display);font-size:22px;color:var(--fire);line-height:1;flex-shrink:0}
+.ab-bar-wrap{position:absolute;top:0;left:0;right:0;height:2px;background:rgba(245,166,35,.1)}
+.ab-bar-fill{height:2px;background:linear-gradient(90deg,var(--fire),var(--ember));transition:width .5s}
 /* Outreach trackers */
 .ot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 @media(max-width:480px){.ot-grid{grid-template-columns:1fr}}
@@ -674,7 +706,7 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
 <div class="hero">
   <div class="hero-eye">swaroop's empire dashboard · 12-month build</div>
   <div class="hero-name">₹5L/MONTH<br>EMPIRE</div>
-  <div class="hero-sub">services → agents → course → brand deals · solo to ceo · agency that works for you · day 1: june 3 2026</div>
+  <div class="hero-sub">services → agents → course → brand deals · solo to ceo · agency that works for you · day 1: june 8 2026</div>
   <div class="hero-stats">
     <div class="hs"><div class="hs-n" id="h-d60">0</div><div class="hs-l" id="h-d60-lbl">day / 60 sprint</div></div>
     <div class="hs-div"></div>
@@ -790,21 +822,28 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
     <div class="tc-check" id="tc-check-delivery"></div>
     <div class="tc-info">
       <div class="tc-label">🎯 Client delivery block — 2 hours deep work · Meta campaigns, n8n workflows, reporting</div>
-      <div class="tc-note">most important revenue block · zero distractions</div>
+      <div class="tc-note">most important revenue block · zero distractions · phone on DND</div>
     </div>
   </div>
   <div class="tc-item" id="tc-sop" onclick="toggleTask('sop')">
     <div class="tc-check" id="tc-check-sop"></div>
     <div class="tc-info">
       <div class="tc-label">📋 1 SOP documented — write one process down that you did today</div>
-      <div class="tc-note">20 SOPs = your first hire is ready · do one per day</div>
+      <div class="tc-note">20 SOPs = your first hire is ready · do one per day · this is tomorrow's leverage</div>
     </div>
   </div>
   <div class="tc-item" id="tc-admin" onclick="toggleTask('admin')">
     <div class="tc-check" id="tc-check-admin"></div>
     <div class="tc-info">
-      <div class="tc-label">💰 Admin done — calls, invoices, proposals, follow-ups logged</div>
-      <div class="tc-note">update pipeline, nudge silent leads, check Wise</div>
+      <div class="tc-label">💰 Admin done — proposals sent, invoices raised, pipeline updated, leads nudged</div>
+      <div class="tc-note">update funnel, nudge 48hr silent leads, check Wise · 20 mins max</div>
+    </div>
+  </div>
+  <div class="tc-item" id="tc-retention" onclick="toggleTask('retention')">
+    <div class="tc-check" id="tc-check-retention"></div>
+    <div class="tc-info">
+      <div class="tc-label">📊 Retention check — any client at Day 28-32? Send 30-day results report today</div>
+      <div class="tc-note">leads generated · cost per lead · what you changed · send before they ask · this alone cuts churn by 40%</div>
     </div>
   </div>
 </div>
@@ -860,6 +899,29 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
 <button class="closebtn" onclick="bumpF('close',1)">🔥 CLIENT CLOSED</button>
 <button class="resetbtn" onclick="resetFunnel()">↺ reset all funnel counts to zero</button>
 
+<!-- CLOSE RATE DIAGNOSTIC -->
+<div id="close-rate-box" style="background:var(--c2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-top:10px">
+  <div style="font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">sales diagnostics — know where your pipeline breaks</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+    <div style="text-align:center;background:var(--c3);border-radius:var(--rsm);padding:10px">
+      <div style="font-family:var(--display);font-size:22px;color:var(--water)" id="cr-conv-rate">0%</div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:3px">outreach → reply</div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--t3)">target: 3–5%</div>
+    </div>
+    <div style="text-align:center;background:var(--c3);border-radius:var(--rsm);padding:10px">
+      <div style="font-family:var(--display);font-size:22px;color:var(--ash)" id="cr-call-rate">0%</div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:3px">reply → call</div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--t3)">target: 20–30%</div>
+    </div>
+    <div style="text-align:center;background:var(--c3);border-radius:var(--rsm);padding:10px">
+      <div style="font-family:var(--display);font-size:22px;color:var(--earth)" id="cr-close-rate">0%</div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:3px">call → close</div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--t3)">target: 25–35%</div>
+    </div>
+  </div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:10px;line-height:1.7" id="cr-diagnosis">log your funnel numbers above to see where your pipeline breaks — outreach quality, message quality, or close skill.</div>
+</div>
+
 <hr/>
 <div class="sec">your 6-hour daily schedule</div>
 <div class="sched">
@@ -879,6 +941,12 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
 <div class="scbox" style="border-left-color:var(--water)"><div class="sc-l" style="color:var(--water)">🌍 INTERNATIONAL — LinkedIn DM After Accepting</div><div class="sc-t">"Thanks for connecting [Name]. Quick observation — your [ad/funnel] has one gap likely costing you leads. Made a 2-min loom showing exactly what I'd fix. Want me to send it? No pitch, just value."</div></div>
 <div class="scbox" style="border-left-color:var(--water)"><div class="sc-l" style="color:var(--water)">🌍 INTERNATIONAL — Cold Email Subject: your meta ads are leaving money</div><div class="sc-t">"Hey [Name], noticed [brand] is running Meta ads. Are leads that don't convert immediately being followed up automatically? I recovered 34% of lost leads for a similar [niche] brand via WhatsApp + email within 48 hours automatically. Worth a 15-min call? [Calendly link]"</div></div>
 <div class="scbox" style="border-left-color:var(--water)"><div class="sc-l" style="color:var(--water)">🌍 INTERNATIONAL — Upwork Proposal Opener</div><div class="sc-t">"I read your job post twice. Instead of just managing ads, I'd build an automated lead recovery system — every non-converting click followed up automatically. Recovered 40% of lost leads for a similar client in 5 days. This isn't standard Meta ads — it's a full acquisition system. If that's what you want, let's talk."</div></div>
+
+<hr/>
+<div class="sec">🤝 referral engine — fastest warm revenue from month 3</div>
+<div class="scbox" style="border-left-color:var(--earth);margin-bottom:8px"><div class="sc-l" style="color:var(--earth)">REFERRAL ASK — send at Day 30 after first positive result (WhatsApp)</div><div class="sc-t">"Hey [Name], you're getting [X leads / Y CPL] this month — solid results. Quick ask: if you know any other business owner who'd want the same kind of system, I'll knock ₹5,000 off your next invoice for every intro. Just a name and number is enough — I'll handle everything from there."</div></div>
+<div class="scbox" style="border-left-color:var(--earth);margin-bottom:8px"><div class="sc-l" style="color:var(--earth)">REFERRAL FOLLOW-UP — if they said yes but haven't introduced yet (7 days later)</div><div class="sc-t">"Hey [Name], just a reminder on that intro — even one name helps. You've seen what we built for you, so I know you'll only refer someone who'd genuinely benefit. No pressure, but thought I'd nudge."</div></div>
+<div class="scbox" style="border-left-color:var(--fire);margin-bottom:8px"><div class="sc-l" style="color:var(--fire)">30-DAY RESULTS REPORT — send this to every client at Day 30, unprompted</div><div class="sc-t">Subject: [Their Brand] — Month 1 Results + What's Next<br><br>1. Campaigns running: [list]<br>2. Leads generated this month: [number]<br>3. Cost per lead: ₹[X]<br>4. WhatsApp bot: [opens / replies / conversions]<br>5. What I changed mid-month and why: [1 line]<br>6. Plan for month 2: [1 specific action]<br><br>Send this every 30 days, unprompted. This is your single biggest retention lever.</div></div>
 </div>
 
 <!-- ═══ REVENUE MAP ═══ -->
@@ -907,8 +975,8 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
     <div class="rev-row"><span>⚪ S1 + S5 Bundle — 3 clients @ ₹28k<br><span style="font-size:11px;color:var(--t3)">entry clients upselling to S2 · Hire #1 handles</span></span><span style="font-family:var(--mono)">₹84,000</span></div>
     <div class="rev-row" style="border-top:1px solid var(--bd2);padding-top:8px"><span><strong>Gross revenue</strong></span><span style="font-family:var(--mono);font-weight:700">₹7,53,000</span></div>
     <div class="rev-row"><span>4 staff salaries (avg ₹22.5k)</span><span style="color:var(--red);font-family:var(--mono)">−₹90,000</span></div>
-    <div class="rev-row"><span>Tools + ops + misc</span><span style="color:var(--red);font-family:var(--mono)">−₹30,000</span></div>
-    <div class="rev-row" style="border-top:2px solid var(--fire);padding-top:8px"><span style="color:var(--fire);font-weight:700;font-size:14px">YOUR SERVICES MARGIN</span><span style="color:var(--fire);font-family:var(--mono);font-weight:700;font-size:16px">₹6,33,000 ✅</span></div>
+    <div class="rev-row"><span>Tools + ops + misc (scaled WATI + Apollo + ops)</span><span style="color:var(--red);font-family:var(--mono)">−₹50,000</span></div>
+    <div class="rev-row" style="border-top:2px solid var(--fire);padding-top:8px"><span style="color:var(--fire);font-weight:700;font-size:14px">YOUR SERVICES MARGIN</span><span style="color:var(--fire);font-family:var(--mono);font-weight:700;font-size:16px">₹6,13,000 ✅</span></div>
   </div>
   <div class="hire-trigger" style="margin-bottom:20px">
     <span class="ht-ico">✅</span>
@@ -952,20 +1020,20 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
       <div style="font-family:var(--mono);font-size:10px;color:var(--ember);margin-bottom:6px;font-weight:700">THIS IS THE HONEST VERSION — NOT THE HOPEFUL ONE</div>
       <div style="font-size:12px;color:var(--t2);line-height:1.7">The plan is solid. Your skills are real. But outcomes depend entirely on whether you send those 20 DMs and 25 LinkedIn requests EVERY working day — including week 4 when energy drops. That single habit determines everything below.</div>
     </div>
-    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 3 · ₹50–80k margin</span><span style="font-family:var(--mono);color:var(--earth)">65% probability</span></div>
-    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">1–2 domestic S2 clients closed · international pipeline warm · requires daily outreach for 60 days straight</span></div>
-    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 6 · ₹1–1.5L margin</span><span style="font-family:var(--mono);color:var(--earth)">50% probability</span></div>
-    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">3–4 clients · 1 international close · requires closing skills on discovery calls improving each month</span></div>
-    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 9 · ₹2–2.5L margin</span><span style="font-family:var(--mono);color:var(--earth)">40% probability</span></div>
-    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">6–8 clients · Hire #1 stable · requires hiring the right person and training them correctly</span></div>
-    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 12 · ₹3–4L margin (services)</span><span style="font-family:var(--mono);color:var(--fire)">30–35% probability</span></div>
-    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">10–14 clients · 2 hires · agents starting · requires zero major setbacks in delivery or hiring</span></div>
-    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 12 · ₹5L+ total (all streams)</span><span style="font-family:var(--mono);color:var(--red)">15–20% probability</span></div>
-    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">requires near-perfect execution on every front simultaneously · possible but not the base case</span></div>
+    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 3 · ₹71k–1.3L margin</span><span style="font-family:var(--mono);color:var(--earth)">65% probability</span></div>
+    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">2 domestic S2 clients + optional S4 project · intl. pipeline warm not closed · requires 60 days of daily outreach without gaps</span></div>
+    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 6 · ₹1.5–2.5L margin</span><span style="font-family:var(--mono);color:var(--earth)">50% probability</span></div>
+    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">3–5 clients · first international close (Month 4–5) · Hire #1 at Month 4 · requires close rate improving each month</span></div>
+    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 9 · ₹3–4L margin</span><span style="font-family:var(--mono);color:var(--earth)">40% probability</span></div>
+    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">6–10 clients · 1–2 hires stable · agents starting · referrals contributing 1 client/month · no major churn events</span></div>
+    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 12 · ₹4–5L margin (services + agents)</span><span style="font-family:var(--mono);color:var(--fire)">35–40% probability</span></div>
+    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">10–15 clients · 2 hires · agents generating ₹50–80k · referral engine working · near-perfect execution required</span></div>
+    <div class="rev-row"><span style="font-weight:600;color:var(--t1)">Month 15 · ₹5L+ margin</span><span style="font-family:var(--mono);color:var(--earth)">70% probability</span></div>
+    <div class="rev-row"><span style="font-size:11px;color:var(--t3);padding-left:8px">the realistic high-confidence target · 3 extra months of compounding makes this very achievable · month 12 → month 15 is a timing gap, not a plan failure</span></div>
     <div style="border-top:1px solid var(--bd2);margin-top:8px;padding-top:12px">
       <div style="font-family:var(--mono);font-size:10px;color:var(--t3);line-height:1.8">
         <strong style="color:var(--t1)">Most realistic month 12 outcome at 70-80% consistent execution:</strong><br>
-        ₹2.5–3.5L margin from services (8–12 clients, 1–2 hires) + ₹20–50k early agent income = <strong style="color:var(--fire)">₹2.7–4L total</strong><br><br>
+        ₹3–4L margin from services (8–12 clients, 2 hires, referrals kicking in) + ₹30–80k early agent income = <strong style="color:var(--fire)">₹3.3–4.8L total</strong><br><br>
         <strong style="color:var(--t1)">What makes it achievable:</strong> You already have clients (not starting from zero). Skills are proven. Service is in genuine demand.<br><br>
         <strong style="color:var(--t1)">What will derail it:</strong> Outreach dropping to 2–3 days/week after month 2. Doing delivery + outreach + everything simultaneously without a system. Trying to build agents/course too early.
       </div>
@@ -1034,11 +1102,11 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
       <div class="pt"><span class="pdot f"></span><span><strong>Deliver insane results in first 14 days</strong> for every client — this is your case study factory</span></div>
       <div class="pt"><span class="pdot a"></span><span><strong>Build all 20 SOPs simultaneously</strong> — document every process as if handing it to a hire tomorrow</span></div>
       <div class="pt"><span class="pdot e"></span><span><strong>Start agency brand</strong> — name, logo, LinkedIn page, case study format (not personal brand yet)</span></div>
-      <div class="pt"><span class="pdot w"></span><span><strong>Target: ₹1.5L gross by end of month 3</strong> — this triggers your first hire</span></div>
+      <div class="pt"><span class="pdot w"></span><span><strong>Hire #1 trigger: ₹1L gross consistently for 1 month</strong> — don't wait for ₹1.5L. At 3 S2 clients your delivery capacity is already full. Hire at ₹1L or you'll drown by month 4.</span></div>
     </div>
     <div class="hire-trigger">
       <span class="ht-ico">🎯</span>
-      <span class="ht-text"><strong>Hire Trigger:</strong> When gross revenue hits ₹1.5L/month consistently for 2 months → hire Hire #1</span>
+      <span class="ht-text"><strong>Hire Trigger:</strong> When gross revenue hits ₹1L/month consistently for 1 month → hire Hire #1. Do NOT wait for ₹1.5L. At 3 S2 clients your 2-hour delivery block is already at capacity. Every week you delay hiring costs you more in client quality than the salary costs you.</span>
     </div>
     <div class="phase-rev-grid">
       <div class="prv"><div class="prv-n" style="color:var(--fire)">3–4</div><div class="prv-l">clients</div></div>
@@ -1593,8 +1661,9 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
       <div class="sm-row"><span>1 S1 client @ ₹22k</span><span>₹22,000</span></div>
       <div class="sm-row"><span>1 international S2 @ $1,000</span><span>₹83,000</span></div>
       <div class="sm-row"><span>1 S4 project (if comes)</span><span>₹60,000 one-time</span></div>
-      <div class="sm-row"><span>Tools cost</span><span style="color:var(--red)">−₹20,000</span></div>
-      <div class="sm-row total"><span>Realistic month 3 margin</span><span style="color:var(--earth)">₹1.5–2.1L ✅</span></div>
+      <div class="sm-row"><span>Tools cost (Apollo + WATI + n8n + HeyGen)</span><span style="color:var(--red)">−₹35,000</span></div>
+      <div class="sm-row total"><span>Realistic month 3 margin</span><span style="color:var(--earth)">₹71k–1.29L ⚠️</span></div>
+      <div class="sm-row" style="border:none;padding-top:0"><span style="font-family:var(--mono);font-size:9px;color:var(--t3)">Note: intl. client realistically closes month 4–5. Month 3 margin without intl = ₹71–131k depending on S4. By Month 5 with intl: ₹1.5–2L+</span></div>
     </div>
 
     <div class="stage-niche">
@@ -1660,8 +1729,8 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
       <div class="sm-row"><span>2 × S1 @ ₹22k</span><span>₹44,000</span></div>
       <div class="sm-row"><span>1 × S4 project avg</span><span>₹60,000</span></div>
       <div class="sm-row"><span>Hire #1 salary</span><span style="color:var(--red)">−₹25,000</span></div>
-      <div class="sm-row"><span>Tools + ops</span><span style="color:var(--red)">−₹20,000</span></div>
-      <div class="sm-row total"><span>Your margin</span><span style="color:var(--earth)">₹2,69,000 ✅</span></div>
+      <div class="sm-row"><span>Tools + ops (Apollo + WATI across clients + n8n)</span><span style="color:var(--red)">−₹35,000</span></div>
+      <div class="sm-row total"><span>Your margin</span><span style="color:var(--earth)">₹2,54,000 ✅</span></div>
     </div>
 
     <div class="stage-action">
@@ -1719,8 +1788,8 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
       <div class="sm-row"><span>8 × S2 + 4 × S3 + 2 × S5</span><span>₹4,60,000</span></div>
       <div class="sm-row"><span>2 × S4 projects</span><span>₹1,20,000</span></div>
       <div class="sm-row"><span>3 staff salaries</span><span style="color:var(--red)">−₹70,000</span></div>
-      <div class="sm-row"><span>Tools + ops</span><span style="color:var(--red)">−₹25,000</span></div>
-      <div class="sm-row total"><span>Your margin</span><span style="color:var(--earth)">₹4,85,000 ✅</span></div>
+      <div class="sm-row"><span>Tools + ops (WATI per client × 14 + Apollo + n8n)</span><span style="color:var(--red)">−₹40,000</span></div>
+      <div class="sm-row total"><span>Your margin</span><span style="color:var(--earth)">₹4,70,000 ✅</span></div>
     </div>
   </div>
 
@@ -1789,7 +1858,7 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
     <div class="uf-arrow">→<div class="uf-when">any time<br>when ready</div></div>
     <div class="uf-step"><div class="uf-svc">S4<br>₹60k<br><span style="font-size:9px">one-time</span></div><div class="uf-label">system build<br>+ maintenance</div></div>
   </div>
-  <div class="upsell-note">Every client starts at S1 or S2. Every client should end at S2 + possible S3/S5 combo. S4 is pitched to clients who want to own the system outright. The goal: increase revenue per client without adding new clients.</div>
+  <div class="upsell-note">Every client starts at S1 or S2. Every client should end at S2 + possible S3/S5 combo. S4 is pitched to clients who want to own the system outright. The goal: increase revenue per client without adding new clients.<br><br><strong style="color:var(--fire)">Pricing escalation rule:</strong> Months 1–3: open at ₹42k for S2 (minimum ₹38k). Month 6+: open at ₹48k. Month 9+: open at ₹55k. Your results, case studies, and team existence justify each increase. New clients always pay current rates — existing clients stay at their rate. Never raise existing client rates without adding visible new value.</div>
 
   <!-- REJECTION RULES -->
   <div class="sec">who to reject — clients who drain time without results</div>
@@ -1798,7 +1867,9 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
     <div class="rt-row-simple"><span class="reject-ico">❌</span><span><strong>Clients who want SEO, websites, or Google Ads</strong> — not your service. Referring costs you nothing. Doing it costs you focus.</span></div>
     <div class="rt-row-simple"><span class="reject-ico">❌</span><span><strong>Clients who "just want organic" with no ad budget</strong> — SMM results take 6+ months. They won't stay that long without seeing faster wins.</span></div>
     <div class="rt-row-simple"><span class="reject-ico">❌</span><span><strong>Clients whose product has no proven sales</strong> — ads amplify what works. If nobody is buying already, ads won't fix that. You get blamed.</span></div>
-    <div class="rt-row-simple"><span class="reject-ico">❌</span><span><strong>Anyone who negotiates below ₹20k domestic / $800 intl.</strong> — cheap clients take more time, give less margin, and leave fastest. Non-negotiable floor.</span></div>
+    <div class="rt-row-simple"><span class="reject-ico">❌</span><span><strong>Anyone who negotiates below ₹38k domestic / $800 intl.</strong> — ₹38k is the floor, not ₹20k. One cheap client anchors your pricing psychology for months. The cheapest clients also demand the most time.</span></div>
+    <div class="rt-row-simple"><span class="reject-ico">❌</span><span><strong>Anyone who won't sign a 3-month minimum agreement.</strong> Month-to-month clients have nothing at stake. They leave after 4 weeks when the first campaign is still learning. Your contract must read: "Minimum 3-month engagement, invoiced monthly in advance." Non-negotiable. This one clause cuts churn by 40%.</span></div>
+    <div class="rt-row-simple"><span class="reject-ico">❌</span><span><strong>Clients who expect results in 2 weeks.</strong> Meta campaigns take 2–4 weeks to exit the learning phase. If they can't accept this, they'll churn during your learning phase, leave a bad review, and waste 40+ hours of your delivery time. Screen for this on the discovery call.</span></div>
   </div>
 
 </div>
@@ -2625,11 +2696,13 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
   </div>
 
   <div class="card" style="margin-bottom:16px">
-    <div class="sec" style="margin-bottom:10px">the 4 things that will make or break this</div>
+    <div class="sec" style="margin-bottom:10px">the 6 things that will make or break this</div>
     <div class="rc-row"><span class="rc-ico">1️⃣</span><span><strong style="color:var(--t1)">Routine consistency over 90 days.</strong> The first 3 months set everything. Miss your outreach targets even 3 days/week and the funnel breaks. This is the single biggest variable.</span></div>
-    <div class="rc-row"><span class="rc-ico">2️⃣</span><span><strong style="color:var(--t1)">Minimum ₹20k domestic / $1,000 intl. pricing.</strong> One cheap client destroys your time budget. You have 6 hours/day. Price protects that.</span></div>
+    <div class="rc-row"><span class="rc-ico">2️⃣</span><span><strong style="color:var(--t1)">Minimum ₹38k domestic / $800 intl. pricing. No exceptions.</strong> One cheap client at Month 1 anchors all your future pricing psychologically. You'll spend 3 months undoing that damage. Floor is ₹38k. Negotiate to ₹38k maximum — never lower.</span></div>
     <div class="rc-row"><span class="rc-ico">3️⃣</span><span><strong style="color:var(--t1)">Phase sequencing.</strong> Services before agents before brand before courses. Jumping to courses in month 2 with no audience = zero sales and wasted time.</span></div>
     <div class="rc-row"><span class="rc-ico">4️⃣</span><span><strong style="color:var(--t1)">Protecting personal time.</strong> Burnout at month 4 ends everything. The routine below is designed so you can do this for 12 months without breaking.</span></div>
+    <div class="rc-row"><span class="rc-ico">5️⃣</span><span><strong style="color:var(--red)">Hire #1 at ₹1L gross, not ₹1.5L.</strong> Your 2-hour delivery block fits exactly 3 S2 clients properly. At client #4 you are already overloaded, quality drops, clients churn. Hire at ₹1L — the salary is ₹20–25k, the cost of one bad churn is ₹42k + weeks of recovery. It's not even close.</span></div>
+    <div class="rc-row"><span class="rc-ico">6️⃣</span><span><strong style="color:var(--red)">Send the 30-day results document to every client without fail.</strong> At exactly Day 30 after onboarding, send every client a one-page: leads generated, cost per lead, campaigns running, what changed. Not because they asked — before they ask. This single habit reduces churn from 25% to under 5%. Clients who see results documented in writing don't leave.</span></div>
   </div>
 
   <hr/>
@@ -2670,7 +2743,7 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
 
     <div class="tl-block">
       <div class="tl-left"><div class="tl-time">11:00</div><div class="tl-dot" style="background:var(--fire)"></div><div class="tl-line" style="background:var(--fire)"></div></div>
-      <div class="tl-right"><div class="tl-card"><div class="tl-label">💰 MONEY ADMIN + CONTENT POST</div><div class="tl-desc">Raise invoices via Zoho/Razorpay. Check Wise for incoming payments. Post 1 value piece on LinkedIn or Instagram (pre-written from Saturday batch — do NOT write from scratch now). Reply to 5–10 comments to boost reach. Total: 45 minutes.</div><div class="tl-dur">45 min · admin + content · keep it short · everything is pre-scheduled</div></div></div>
+      <div class="tl-right"><div class="tl-card"><div class="tl-label">💰 ADMIN + CONTENT (Mon/Wed/Fri only)</div><div class="tl-desc">Raise invoices via Zoho/Razorpay. Check Wise for incoming payments. Update pipeline in dashboard. <strong>Mon/Wed/Fri only:</strong> Post 1 value piece on LinkedIn or Instagram (pre-written from Saturday batch — do NOT write from scratch now). Reply to 5–10 comments. <strong>Tue/Thu:</strong> Admin only — 20 minutes, then you're done.</div><div class="tl-dur">45 min admin · content post Mon/Wed/Fri only · everything pre-scheduled from Saturday</div><div class="tl-why">why content 3x/week not daily: daily posting sounds right but 7 rushed posts every week for 12 months will burn you out by Month 4. 3 quality posts/week consistently for 52 weeks > 7 average posts for 16 weeks then zero. sustainability beats intensity every time.</div></div></div>
     </div>
 
     <div class="tl-block">
@@ -2694,30 +2767,74 @@ input[type=range]{width:100%;accent-color:var(--fire);cursor:pointer}
   <!-- WEEKLY RHYTHM -->
   <div class="sec">weekly rhythm — same structure every week</div>
   <div class="week-grid">
-    <div class="day-col"><div class="day-name">MON</div><div class="day-focus">Full routine + set week targets</div><div class="day-hours fire">6h</div></div>
-    <div class="day-col"><div class="day-name">TUE</div><div class="day-focus">Full routine + content creation</div><div class="day-hours fire">6h</div></div>
-    <div class="day-col"><div class="day-name">WED</div><div class="day-focus">Full routine + weekly review 30min</div><div class="day-hours fire">6h</div></div>
-    <div class="day-col"><div class="day-name">THU</div><div class="day-focus">Full routine + invoice all clients</div><div class="day-hours fire">6h</div></div>
-    <div class="day-col"><div class="day-name">FRI</div><div class="day-focus">Full routine + plan next week</div><div class="day-hours fire">6h</div></div>
-    <div class="day-col rest"><div class="day-name" style="color:var(--earth)">SAT</div><div class="day-focus" style="color:var(--earth)">Content batch only. No outreach. No delivery.</div><div class="day-hours earth">2h</div></div>
+    <div class="day-col"><div class="day-name">MON</div><div class="day-focus">Full routine + set week targets + content post #1</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col"><div class="day-name">TUE</div><div class="day-focus">Full routine + send 30-day client result reports (if due)</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col"><div class="day-name">WED</div><div class="day-focus">Full routine + content post #2 + weekly review 30min</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col"><div class="day-name">THU</div><div class="day-focus">Full routine + invoice all clients + referral asks (if eligible)</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col"><div class="day-name">FRI</div><div class="day-focus">Full routine + content post #3 + plan next week</div><div class="day-hours fire">6h</div></div>
+    <div class="day-col rest"><div class="day-name" style="color:var(--earth)">SAT</div><div class="day-focus" style="color:var(--earth)">Content batch only: write 3 LinkedIn posts + record 1 HeyGen video. No outreach. No delivery.</div><div class="day-hours earth">2h</div></div>
     <div class="day-col rest"><div class="day-name" style="color:var(--earth)">SUN</div><div class="day-focus" style="color:var(--earth)">Complete rest. Zero work. Non-negotiable.</div><div class="day-hours gray">0h</div></div>
   </div>
   <div class="card" style="margin-bottom:16px">
-    <div class="rc-row"><span class="rc-ico">📅</span><span><strong style="color:var(--t1)">Saturday only:</strong> 2 hrs of content batching — write 5 LinkedIn posts, record 1 HeyGen video, schedule all next week's posts. This is why you can post daily without daily effort.</span></div>
+    <div class="rc-row"><span class="rc-ico">📅</span><span><strong style="color:var(--t1)">Saturday content batch (2 hrs only):</strong> Write 3 LinkedIn posts + script 1 HeyGen video. This powers Mon/Wed/Fri posts for the whole week. 3 quality posts/week for 52 weeks beats 7 rushed posts for 16 weeks and then burnout. Do not deviate.</span></div>
     <div class="rc-row"><span class="rc-ico">🌿</span><span><strong style="color:var(--earth)">Sunday is sacred:</strong> Your competitors work 7 days and burn out at month 4. You rest Sunday and run for 12 months. Sunday is a competitive advantage, not laziness.</span></div>
-    <div class="rc-row"><span class="rc-ico">📊</span><span><strong style="color:var(--t1)">Wednesday 30-min review:</strong> Check what's working in outreach. Which DM script got most replies this week? Which client is taking too much time? Adjust and move on.</span></div>
+    <div class="rc-row"><span class="rc-ico">📊</span><span><strong style="color:var(--t1)">Wednesday 30-min review:</strong> What DM script got most replies this week? Which client is taking more than their share of your time? Close rate this month vs last month? Adjust one thing only — not everything.</span></div>
+    <div class="rc-row"><span class="rc-ico">📋</span><span><strong style="color:var(--fire)">Tuesday client retention check:</strong> Any client reaching Day 25-30 since onboarding? Send them a 1-page results report today. Don't wait for them to ask. Clients who see documented results in writing at Day 30 renew without hesitation.</span></div>
+    <div class="rc-row"><span class="rc-ico">🤝</span><span><strong style="color:var(--earth)">Thursday referral ask:</strong> Any client who showed positive results this week? Send one direct WhatsApp: "You're getting [X results] — if you know a business owner who'd want the same, I'll give you ₹5,000 off next month." One referral/month from Month 3 changes your entire trajectory.</span></div>
   </div>
 
   <!-- MONTHLY FOCUS -->
   <div class="sec">monthly focus — what to prioritise each month</div>
   <div class="mf-grid">
-    <div class="mf-card"><div class="mf-months" style="color:var(--fire)">months 1–3</div><div class="mf-focus">Close clients · both channels</div><div class="mf-item"><span class="mf-dot" style="background:var(--fire)"></span>🇮🇳 domestic: 2–3 S2 clients (real estate, coaching, clinics)</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>🌍 international: build pipeline → 1 intl close by month 2–3</div><div class="mf-item"><span class="mf-dot" style="background:var(--fire)"></span>Deliver results in 14 days · build 20 SOPs</div><div class="mf-item"><span class="mf-dot" style="background:var(--t3)"></span>Ignore: agents, HeyGen, course, brand</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Goal: ₹1.5–2L gross by month 3</div></div>
-    <div class="mf-card"><div class="mf-months" style="color:var(--ember)">months 4–6</div><div class="mf-focus">Hire #1 · Add S1 + intl.</div><div class="mf-item"><span class="mf-dot" style="background:var(--ember)"></span>Hire #1 handles S2 delivery</div><div class="mf-item"><span class="mf-dot" style="background:var(--ember)"></span>You close 3–4 more clients</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>2+ international S2 clients</div><div class="mf-item"><span class="mf-dot" style="background:var(--ember)"></span>First S4 project (cash injection)</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Goal: ₹2.5–3.5L gross</div></div>
+    <div class="mf-card"><div class="mf-months" style="color:var(--fire)">months 1–3</div><div class="mf-focus">Close clients · domestic first</div><div class="mf-item"><span class="mf-dot" style="background:var(--fire)"></span>🇮🇳 domestic: 2–3 S2 clients (real estate, coaching, clinics)</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>🌍 international: build pipeline → realistic close month 4–5</div><div class="mf-item"><span class="mf-dot" style="background:var(--fire)"></span>Deliver results in 14 days · build 20 SOPs</div><div class="mf-item"><span class="mf-dot" style="background:var(--t3)"></span>Ignore: agents, HeyGen, course, brand</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Real month 3 goal: ₹70k–1.3L gross (honest)</div></div>
+    <div class="mf-card"><div class="mf-months" style="color:var(--ember)">months 4–6</div><div class="mf-focus">Hire #1 at ₹1L · Add intl. close</div><div class="mf-item"><span class="mf-dot" style="background:var(--ember)"></span>Hire #1 at ₹1L gross — not ₹1.5L</div><div class="mf-item"><span class="mf-dot" style="background:var(--ember)"></span>Hire handles S2 delivery · you close only</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>🌍 First international close month 4–5</div><div class="mf-item"><span class="mf-dot" style="background:var(--ember)"></span>First S4 project cash injection</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Goal: ₹1.5–2.5L gross by month 6</div></div>
     <div class="mf-card"><div class="mf-months" style="color:var(--water)">months 7–9</div><div class="mf-focus">Hires #2 + #3 · Build assets</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>Hire #2 (automation) joins</div><div class="mf-item"><span class="mf-dot" style="background:var(--water)"></span>Hire #3 (SMM) joins</div><div class="mf-item"><span class="mf-dot" style="background:var(--ash)"></span>Launch WhatsApp Lead Bot agent</div><div class="mf-item"><span class="mf-dot" style="background:var(--ash)"></span>HeyGen content machine starts</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Goal: ₹4–5L gross</div></div>
     <div class="mf-card"><div class="mf-months" style="color:var(--earth)">months 10–12</div><div class="mf-focus">CEO mode · all streams</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Hire #4 (Client Success) joins</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>You only expand + strategise</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Course + brand deals live</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Inbound leads replace outreach</div><div class="mf-item"><span class="mf-dot" style="background:var(--earth)"></span>Goal: ₹6–8L gross · ₹5L+ margin</div></div>
   </div>
 
   <hr/>
+
+  <!-- CASH FLOW REALITY MONTHS 1-4 -->
+  <div class="sec">cash flow reality — months 1 to 4 · know this before you start</div>
+  <div class="card" style="margin-bottom:16px;border-color:rgba(224,92,0,.2)">
+    <div style="background:rgba(224,92,0,.08);border:1px solid rgba(224,92,0,.2);border-radius:8px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--ember);font-weight:700;margin-bottom:4px">READ THIS BEFORE MONTH 1 — NOT DURING A CASH CRISIS</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.7">The first 3 months will feel financially tight. This is normal and expected. Knowing it in advance means it won't derail you when it happens. The business is real. The income just takes 60–90 days to build. Budget accordingly.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px">
+      <div style="background:var(--c2);border:1px solid rgba(239,83,80,.2);border-radius:var(--r);padding:12px">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--red);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">month 1 — foundation</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.8">Expected income: <strong style="color:var(--t1)">₹0–42k</strong><br>Tools + ops: <strong style="color:var(--red)">−₹25–35k</strong><br>Net cash: <strong style="color:var(--ember)">₹0–17k</strong><br>Reality: You're building pipeline, not billing yet. Have 2 months of personal expenses saved before June 8.</div>
+      </div>
+      <div style="background:var(--c2);border:1px solid rgba(245,166,35,.2);border-radius:var(--r);padding:12px">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--fire);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">month 2 — first wins</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.8">Expected income: <strong style="color:var(--t1)">₹42–84k</strong><br>Tools + ops: <strong style="color:var(--red)">−₹30–35k</strong><br>Net cash: <strong style="color:var(--fire)">₹12–54k</strong><br>Reality: 1–2 clients paying. Still tight. Do not hire yet — wait for Month 3 signal.</div>
+      </div>
+      <div style="background:var(--c2);border:1px solid rgba(76,175,125,.2);border-radius:var(--r);padding:12px">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--earth);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">month 3 — traction</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.8">Expected income: <strong style="color:var(--t1)">₹84–1.3L</strong><br>Tools + ops: <strong style="color:var(--red)">−₹35k</strong><br>Net cash: <strong style="color:var(--earth)">₹49k–95k</strong><br>Reality: 2–3 domestic clients. First referral may arrive. Intl pipeline warm.</div>
+      </div>
+      <div style="background:var(--c2);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:12px">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--earth);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">month 4 — hire trigger</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.8">Expected income: <strong style="color:var(--t1)">₹1–1.5L</strong><br>Hire #1 + tools: <strong style="color:var(--red)">−₹55–60k</strong><br>Net margin: <strong style="color:var(--earth)">₹40–90k</strong><br>Reality: Hire now. Margin dips temporarily. This is correct — hire enables scale.</div>
+      </div>
+    </div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--t3);line-height:1.8;padding:10px;background:var(--c2);border-radius:var(--rsm)">⚡ Have at least <strong style="color:var(--t1)">₹60,000–80,000 in personal savings</strong> before June 8 to cover months 1–2 personal expenses without stress. If you start from a place of financial anxiety, you'll underprice clients and make desperate decisions. Enter from a position of patience — it changes every negotiation.</div>
+  </div>
+
+  <hr/>
+
+  <!-- MONTH 3 CHECKPOINT -->
+  <div class="sec">month 3 hard checkpoint — pass or re-route</div>
+  <div class="card" style="margin-bottom:16px;border-color:rgba(245,166,35,.25)">
+    <div style="font-family:var(--display);font-size:18px;color:var(--fire);letter-spacing:.5px;margin-bottom:12px">THE 90-DAY GATE — EVALUATE HONESTLY</div>
+    <div style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:14px">At the end of Month 3 (September 8, 2026), pause for one hour and answer these 4 questions. Not what you planned — what actually happened. If you score 3+, continue the plan as-is. If you score 2 or below, the plan needs a route correction — which is not failure, it's data.</div>
+    <div class="rc-row"><span class="rc-ico">✅</span><span><strong style="color:var(--t1)">Gate 1:</strong> Do you have 2+ paying S2 clients (not prospects, not "almost closed" — paid invoices)? If yes, you're on track. If no, the outreach or close rate is broken — diagnose using the funnel rates.</span></div>
+    <div class="rc-row"><span class="rc-ico">✅</span><span><strong style="color:var(--t1)">Gate 2:</strong> Do you have 5+ active international prospects in warm conversation? (Replied more than once, showed interest.) If no, your LinkedIn outreach profile or message quality needs a rewrite.</span></div>
+    <div class="rc-row"><span class="rc-ico">✅</span><span><strong style="color:var(--t1)">Gate 3:</strong> Have you documented 10+ SOPs? If no, you're building a job for yourself, not a business. The hire will be chaos without them.</span></div>
+    <div class="rc-row"><span class="rc-ico">✅</span><span><strong style="color:var(--t1)">Gate 4:</strong> Have zero clients complained about results or communication? If a client is already unhappy at Day 30, your onboarding or expectation-setting is broken. Fix it now, not at Month 6.</span></div>
+    <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:var(--rsm);padding:12px;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--t3);line-height:1.8">Score 4/4 → full speed ahead · Score 3/4 → fix the one gap, continue · Score 2/4 → stop, diagnose, adjust the outreach strategy or pricing before Month 4 · Score 1 or 0 → the execution model needs a fundamental reset — this is recoverable but requires honesty, not optimism</div>
+  </div>
 
   <!-- HABIT TRACKER -->
   <div class="sec">21-day habit streak tracker — mark each day you follow the routine</div>
@@ -2732,14 +2849,14 @@ const TASKS={
     {id:'t02',text:'Close S2 domestic client #2 — clinic, D2C brand, or exporter',note:'same process · second niche proves you can replicate results',tags:['dom']},
     {id:'t03',text:'Set up LinkedIn + Upwork + Apollo.io for international pipeline from Day 1',note:'rewrite headline: "AI Marketing Automation · Meta Ads + n8n" · build 300-person Apollo list',tags:['intl']},
     {id:'t04',text:'Set up Wise + Payoneer + Deel before end of month 1',note:'must be ready before first international client closes · takes 30 min to set up',tags:['intl']},
-    {id:'t05',text:'Start 25 LinkedIn intl. requests/day from Day 1 — UAE, Australia, UK founders',note:'international closes in 4–8 weeks · start pipeline now so it closes by month 2',tags:['intl']},
-    {id:'t06',text:'Close S2 international client #1 at $800–1,200/month',note:'target by end of month 2 · combined with 2 domestic = ₹1.5–2L gross already',tags:['intl']},
+    {id:'t05',text:'Start 25 LinkedIn intl. requests/day from Day 1 — UAE, Australia, UK founders',note:'pipeline takes 60–90 days to warm · start day 1 so first close lands month 4–5 not month 7',tags:['intl']},
+    {id:'t06',text:'Close S2 international client #1 at $800–1,200/month',note:'realistic target: end of month 4–5 · cold LinkedIn/Upwork to $1k retainer = 60–90 day cycle · start pipeline now · Five Elements UK already in your roster — confirm their rate first',tags:['intl']},
     {id:'t07',text:'Deliver first results to every client within 14 days of onboarding',note:'WhatsApp bot live · first leads in client\'s phone · they see value immediately',tags:['dom','intl']},
     {id:'t08',text:'Record loom demo of automation working + case study of first result',note:'90-sec video of WhatsApp leads coming in real-time · best sales tool for closing next clients',tags:['dom','intl']},
     {id:'t09',text:'Document 1 SOP per day — 20 SOPs before month 3 ends',note:'write down every process as you do it · this is your hire\'s training on day 1',tags:['dom']},
   ],
   p2:[
-    {id:'t09',text:'Hire #1 triggered — revenue at ₹1.5L gross for 2 months',note:'hire Meta ads executor at ₹20–25k · they handle 3 existing S2 clients',tags:['dom']},
+    {id:'t09',text:'Hire #1 triggered — revenue at ₹1L gross for 1 month',note:'hire at ₹1L not ₹1.5L · at 3 S2 clients your delivery block is already full · delaying costs more than the salary · hire Meta ads executor at ₹20–25k · they handle 3 existing S2 clients',tags:['dom']},
     {id:'t10',text:'Train Hire #1 using your 20 SOPs — week 1 shadow, week 2 supervised, week 3 independent',note:'SOPs built in Stage 1 make this seamless · don\'t skip the training structure',tags:['dom']},
     {id:'t11',text:'Close 2 more S2 clients (hire handles existing, you close new)',note:'with hire on delivery you have 6 hrs/day for sales · use it',tags:['dom']},
     {id:'t12',text:'Close 2 S1 clients — easy for hire to manage',note:'entry-level clients · plan to upsell to S2 in month 3 of their contract',tags:['dom']},
@@ -2823,7 +2940,7 @@ function save(){localStorage.setItem('empire_v1',JSON.stringify(st))}
 // Days + Month — using local date comparison (IST-safe)
 const NOW=new Date();
 const _today=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate());
-const _start=new Date(2026,5,3); // June 3 2026 local midnight
+const _start=new Date(2026,5,8); // June 8 2026 local midnight
 const _diff=Math.floor((_today-_start)/86400000);
 const d60=Math.max(0,Math.min(60,_diff+1));
 const monthNum=Math.max(0,Math.min(12,Math.floor(_diff/30)+1));
@@ -2831,10 +2948,10 @@ const monthNum=Math.max(0,Math.min(12,Math.floor(_diff/30)+1));
 const _h60=document.getElementById('h-d60');if(_h60)_h60.textContent=d60===0?'0':d60;
 const _hmo=document.getElementById('h-month');if(_hmo)_hmo.textContent=monthNum===0?'0':monthNum;
 const d60lbl=document.getElementById('h-d60-lbl');
-if(d60===0&&d60lbl)d60lbl.textContent='prep day · starts june 3';
+if(d60===0&&d60lbl)d60lbl.textContent='prep day · starts june 8';
 if(d60===0){
   const lbl=document.querySelector('#h-d60 + .hs-l');
-  if(lbl)lbl.textContent='prep day · starts june 3';
+  if(lbl)lbl.textContent='prep day · starts june 8';
 }
 
 // Tasks
@@ -2913,6 +3030,26 @@ function updateFunnel(){
   document.getElementById('f-call').textContent=st.funnel.call||0;
   document.getElementById('f-close').textContent=st.funnel.close||0;
   document.getElementById('m-funnel').textContent=(st.funnel.conv||0)+'→'+(st.funnel.call||0)+'→'+(st.funnel.close||0);
+  // Close rate diagnostics
+  const out=st.funnel.out||0,conv=st.funnel.conv||0,call=st.funnel.call||0,close=st.funnel.close||0;
+  const convRate=out>0?Math.round(conv/out*100):0;
+  const callRate=conv>0?Math.round(call/conv*100):0;
+  const closeRate=call>0?Math.round(close/call*100):0;
+  const crConv=document.getElementById('cr-conv-rate');
+  const crCall=document.getElementById('cr-call-rate');
+  const crClose=document.getElementById('cr-close-rate');
+  const crDiag=document.getElementById('cr-diagnosis');
+  if(crConv){crConv.textContent=convRate+'%';crConv.style.color=convRate>=3?'var(--earth)':convRate>=1?'var(--fire)':'var(--red)';}
+  if(crCall){crCall.textContent=callRate+'%';crCall.style.color=callRate>=20?'var(--earth)':callRate>=10?'var(--fire)':'var(--red)';}
+  if(crClose){crClose.textContent=closeRate+'%';crClose.style.color=closeRate>=25?'var(--earth)':closeRate>=15?'var(--fire)':'var(--red)';}
+  if(crDiag&&out>0){
+    let diag='';
+    if(convRate<3) diag='🔴 Outreach→Reply rate is low ('+convRate+'% vs 3–5% target). Fix: personalise the first line of every DM. Generic openers get ignored.';
+    else if(callRate<20) diag='🟡 Reply→Call rate is low ('+callRate+'% vs 20–30% target). Fix: your follow-up message needs a specific hook or Loom demo link.';
+    else if(closeRate<25) diag='🟡 Call→Close rate is low ('+closeRate+'% vs 25–35% target). Fix: price confidence on the call. State ₹42k calmly. Silence after quoting is okay — don\'t fill it.';
+    else diag='✅ All rates healthy. Keep your pipeline volume high and protect your close rate as you scale.';
+    crDiag.textContent=diag;
+  }
 }
 
 // Streams
@@ -3131,13 +3268,6 @@ function updateSummary(){
   if(hAgents)hAgents.textContent=totalAgents;
 }
 
-function switchTab(name,btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('view-'+name).classList.add('active');
-}
-
 // ══════════════════════════════════════
 // DYNAMIC ACCOUNTABILITY SYSTEM
 // ══════════════════════════════════════
@@ -3177,7 +3307,8 @@ function calcProgress(d){
   if(t.delivery) pts++;
   if(t.sop)      pts++;
   if(t.admin)    pts++;
-  return Math.round(pts/7*100);
+  if(t.retention) pts+=0.5; // bonus — not required daily but rewarded
+  return Math.round(Math.min(100, pts/7*100));
 }
 
 function calcStreak(){
@@ -3251,7 +3382,7 @@ function updateDailyProgress(){
   });
 
   // Task checkboxes
-  ['delivery','sop','admin'].forEach(task=>{
+  ['delivery','sop','admin','retention'].forEach(task=>{
     const item=document.getElementById('tc-'+task);
     const chk=document.getElementById('tc-check-'+task);
     if(item) item.className='tc-item'+(t[task]?' done':'');
@@ -3267,6 +3398,8 @@ function updateDailyProgress(){
   }
 
   renderWeekGrid();
+  // Update sticky bar if it exists
+  if(typeof updateStickyBar === 'function') updateStickyBar();
 }
 
 function setOutreach(field,value){
@@ -3479,10 +3612,11 @@ function restoreHires(){
 
 const HABITS=[
   {id:'h1',lbl:'Full routine followed (all 6 blocks)',note:'did you complete every block today?',color:'fire'},
-  {id:'h2',lbl:'Hit outreach targets (30+3+15+20)',note:'all platform numbers reached',color:'fire'},
-  {id:'h3',lbl:'Published 1 piece of content',note:'linkedin, instagram, or youtube',color:'earth'},
-  {id:'h4',lbl:'Personal time protected after 12pm',note:'no work after noon, no guilt',color:'earth'},
-  {id:'h5',lbl:'Asset block done (agent or content)',note:'1 hour of future-income building',color:'water'},
+  {id:'h2',lbl:'Hit outreach targets (30+3+15+20)',note:'all platform numbers reached · quality over speed',color:'fire'},
+  {id:'h3',lbl:'Content posted (Mon/Wed/Fri only)',note:'pre-written from saturday batch · do not write from scratch · 3x/week sustained beats daily burnout',color:'earth'},
+  {id:'h4',lbl:'Personal time protected after 12pm',note:'no work after noon, no guilt · this is the system working',color:'earth'},
+  {id:'h5',lbl:'Asset block done (SOP or agent or content batch)',note:'1 SOP documented · or saturday content batch · or n8n agent build',color:'water'},
+  {id:'h6',lbl:'30-day client report sent (when due)',note:'send every client at Day 30 without them asking · single biggest retention lever',color:'earth'},
 ];
 
 function renderHabits(){
@@ -3495,7 +3629,7 @@ function renderHabits(){
       const on=!!(st.habits&&st.habits[k]);
       return`<div class="hdot${on?' on':''}${on&&h.color==='earth'?' e':''}" onclick="toggleHabit('${k}','${h.color}',this)" title="day ${i+1}"></div>`;
     }).join('');
-    const streak=calcStreak(h.id,days);
+    const streak=calcHabitStreak(h.id,days);
     return`<div class="habit-row">
       <div style="flex:1;min-width:0">
         <div class="habit-label">${h.lbl}</div>
@@ -3519,7 +3653,7 @@ function toggleHabit(k,color,el){
   renderHabits();
 }
 
-function calcStreak(hid,days){
+function calcHabitStreak(hid,days){
   if(!st.habits)return 0;
   let streak=0;
   for(let i=days-1;i>=0;i--){
@@ -3537,7 +3671,287 @@ restorePlatform();updateFunnel();updateSummary();renderHabits();
 renderSOPs();renderCEOChecks();restoreHires();restoreSystems();
 checkDayReset();updateDailyProgress();
 
-// ── PWA: Service Worker + Install Banner ──
+// ══════════════════════════════════════
+// ACCOUNTABILITY SYSTEM v2 — ON-OPEN MODAL + STICKY BAR
+// ══════════════════════════════════════
+
+function getMissedDays(){
+  if(!st.history||!st.history.length) return 0;
+  // Count how many consecutive recent days were missed/skipped
+  let missed=0;
+  const today=new Date().toDateString();
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  // Walk back from yesterday
+  for(let i=1;i<=14;i++){
+    const d=new Date(Date.now()-i*86400000).toDateString();
+    const entry=st.history.find(h=>h.date===d);
+    if(d===today) continue;
+    if(!entry||entry.status==='missed'||entry.status==='skip') missed++;
+    else break;
+  }
+  return missed;
+}
+
+function getAccStreak(){
+  if(!st.history||!st.history.length) return 0;
+  let streak=0;
+  for(const day of st.history){
+    if(day.status==='complete') streak++;
+    else break;
+  }
+  return streak;
+}
+
+function getAccountabilityState(){
+  const today = st.todayAcc || {};
+  const pct = calcProgress();
+  const streak = getAccStreak();
+  const missed = getMissedDays();
+  const started = pct > 0;
+  const done = today.status === 'complete';
+  const skipped = today.status === 'skip';
+  return { pct, streak, missed, started, done, skipped };
+}
+
+// Modal content configs
+const MODAL_CONFIGS = {
+  done: {
+    label: '🔥 DAY LOCKED IN',
+    labelColor: 'var(--earth)',
+    beforeColor: 'rgba(76,175,125,.15)',
+    title: 'You shipped today.',
+    titleGrad: 'linear-gradient(120deg,#edeae2 20%,var(--earth) 80%)',
+    cta: 'View War Room',
+    ctaBg: 'linear-gradient(135deg,var(--earth),#3d9e6b)',
+    dismiss: 'Come back tomorrow',
+  },
+  fire: {
+    label: '⚡ TIME TO MOVE',
+    labelColor: 'var(--fire)',
+    beforeColor: 'rgba(245,166,35,.1)',
+    title: 'Day\'s in progress.\nFinish what you started.',
+    titleGrad: 'linear-gradient(120deg,#edeae2 20%,var(--fire) 80%)',
+    cta: '→ Continue War Room',
+    ctaBg: 'linear-gradient(135deg,var(--fire),var(--ember))',
+    dismiss: 'I\'ll check in later',
+  },
+  fresh: {
+    label: '🌅 NEW DAY. SAME MISSION.',
+    labelColor: 'var(--fire)',
+    beforeColor: 'rgba(245,166,35,.1)',
+    title: 'Day {d60} is waiting.\nThe routine doesn\'t start itself.',
+    titleGrad: 'linear-gradient(120deg,#edeae2 30%,var(--fire) 100%)',
+    cta: '🔥 LET\'S GET IT',
+    ctaBg: 'linear-gradient(135deg,var(--fire),var(--ember))',
+    dismiss: 'Just browsing',
+  },
+  skip1: {
+    label: '⚠️ YESTERDAY SLIPPED',
+    labelColor: 'var(--ember)',
+    beforeColor: 'rgba(224,92,0,.12)',
+    title: 'One skip is human.\nTwo is a pattern.',
+    titleGrad: 'linear-gradient(120deg,#edeae2 20%,var(--ember) 80%)',
+    cta: '→ Make Today Count',
+    ctaBg: 'linear-gradient(135deg,var(--ember),var(--fire))',
+    dismiss: 'I know, I know',
+  },
+  skip2: {
+    label: '🔴 {missed} DAYS GONE',
+    labelColor: 'var(--red)',
+    beforeColor: 'rgba(239,83,80,.1)',
+    title: 'The plan didn\'t pause.\nYour competition didn\'t either.',
+    titleGrad: 'linear-gradient(120deg,#edeae2 10%,var(--red) 80%)',
+    cta: '→ RESTART NOW',
+    ctaBg: 'linear-gradient(135deg,var(--red),var(--ember))',
+    dismiss: 'I\'ll start later',
+  },
+  streak: {
+    label: '🔥 {streak}-DAY STREAK',
+    labelColor: 'var(--fire)',
+    beforeColor: 'rgba(245,166,35,.12)',
+    title: 'You\'re consistent.\nThat\'s the whole game.',
+    titleGrad: 'linear-gradient(120deg,#edeae2 20%,var(--fire) 60%,var(--ember) 100%)',
+    cta: '→ War Room',
+    ctaBg: 'linear-gradient(135deg,var(--fire),var(--ember))',
+    dismiss: 'Let\'s go',
+  }
+};
+
+function buildModal(cfg, stats){
+  const {pct,streak,missed,started,done} = stats;
+  let label = cfg.label.replace('{streak}',streak).replace('{missed}',missed);
+  let title = cfg.title.replace('{d60}',d60);
+  // Stats to show
+  let stat1 = { num: 'DAY '+d60, lbl: 'of 60' };
+  let stat2 = streak > 0 ? { num: streak+'🔥', lbl: 'day streak' } : { num: missed+'✕', lbl: 'days missed' };
+  let stat3 = { num: pct+'%', lbl: 'today done' };
+
+  return `
+  <div id="acc-modal-overlay" onclick="dismissModal(event)">
+    <div id="acc-modal">
+      <div class="ab-bar-wrap"><div class="ab-bar-fill" style="width:${pct}%"></div></div>
+      <div style="position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,${cfg.beforeColor} 0%,transparent 70%);pointer-events:none;border-radius:50%"></div>
+      <div class="am-label" style="color:${cfg.labelColor}">${label}</div>
+      <div class="am-title" style="background:${cfg.titleGrad};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${title.replace('\n','<br>')}</div>
+      ${done ? `<div class="am-sub">Outreach done. Delivery done. The compound interest is running. See you tomorrow.</div>` :
+        missed >= 2 ? `<div class="am-sub">You've been away ${missed} days. The system is still here. Your targets haven't moved. One session today puts you back on track — don't negotiate with yourself, just open the War Room.</div>` :
+        missed === 1 ? `<div class="am-sub">Yesterday didn't happen. That's done. Today is a clean slate — but only if you actually start. Open the War Room, log your first outreach number, and get moving.</div>` :
+        started ? `<div class="am-sub">You've made progress today — ${pct}% complete. The finish line is right there. Don't let a half-day be today's story.</div>` :
+        `<div class="am-sub">25 LinkedIn requests. That's all it takes to start. The rest follows automatically. Open the War Room and go.</div>`
+      }
+      <div class="am-stats">
+        <div class="am-stat"><div class="am-stat-num" style="color:var(--fire)">${stat1.num}</div><div class="am-stat-lbl">${stat1.lbl}</div></div>
+        <div class="am-stat"><div class="am-stat-num" style="color:${streak>0?'var(--fire)':'var(--red)'}">${stat2.num}</div><div class="am-stat-lbl">${stat2.lbl}</div></div>
+        <div class="am-stat"><div class="am-stat-num" style="color:${pct>=85?'var(--earth)':pct>=40?'var(--fire)':'var(--t3)'}">${stat3.num}</div><div class="am-stat-lbl">${stat3.lbl}</div></div>
+      </div>
+      <button class="am-btn-go" style="background:${cfg.ctaBg}" onclick="goToWarRoom()">${cfg.cta}</button>
+      <button class="am-btn-dismiss" onclick="dismissModal()">${cfg.dismiss}</button>
+    </div>
+  </div>`;
+}
+
+function showAccountabilityModal(){
+  // Only show once per browser session (not once per day — we want it every open)
+  if(sessionStorage.getItem('acc_modal_shown')) return;
+  // Don't show if it's before the start date
+  if(_diff < 0) return;
+
+  sessionStorage.setItem('acc_modal_shown','1');
+
+  const stats = getAccountabilityState();
+  let cfg;
+
+  if(stats.done){
+    cfg = MODAL_CONFIGS.done;
+  } else if(stats.missed >= 2){
+    cfg = MODAL_CONFIGS.skip2;
+  } else if(stats.missed === 1){
+    cfg = MODAL_CONFIGS.skip1;
+  } else if(stats.streak >= 3 && !stats.started){
+    cfg = MODAL_CONFIGS.streak;
+  } else if(stats.started){
+    cfg = MODAL_CONFIGS.fire;
+  } else {
+    cfg = MODAL_CONFIGS.fresh;
+  }
+
+  document.body.insertAdjacentHTML('beforeend', buildModal(cfg, stats));
+}
+
+function dismissModal(e){
+  if(e && e.target !== document.getElementById('acc-modal-overlay')) return;
+  const overlay = document.getElementById('acc-modal-overlay');
+  if(overlay){overlay.style.opacity='0';overlay.style.transform='scale(.98)';overlay.style.transition='all .2s';setTimeout(()=>overlay.remove(),200);}
+}
+
+function goToWarRoom(){
+  const overlay = document.getElementById('acc-modal-overlay');
+  if(overlay) overlay.remove();
+  // Switch to the war room tab
+  const warRoomBtn = document.querySelector('.tab[onclick*="warroom"]') ||
+    Array.from(document.querySelectorAll('.tab')).find(t => t.textContent.toLowerCase().includes('war'));
+  if(warRoomBtn) warRoomBtn.click();
+  else {
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    const warView=document.getElementById('view-warroom');
+    if(warView){warView.classList.add('active');}
+  }
+}
+
+// ── STICKY ACCOUNTABILITY BAR ──
+function buildStickyBar(){
+  if(!document.getElementById('acc-bar')){
+    const bar = document.createElement('div');
+    bar.id = 'acc-bar';
+    bar.innerHTML = `
+      <div class="ab-bar-wrap"><div class="ab-bar-fill" id="ab-bar-fill"></div></div>
+      <div class="ab-status pending" id="ab-status-icon">⚡</div>
+      <div class="ab-text">
+        <div class="ab-title" id="ab-title">Today's mission is waiting</div>
+        <div class="ab-sub" id="ab-sub">tap to open war room</div>
+      </div>
+      <div class="ab-pct" id="ab-pct-display">0%</div>
+      <button class="ab-cta" onclick="goToWarRoom()">WAR ROOM →</button>`;
+    document.body.appendChild(bar);
+  }
+  updateStickyBar();
+}
+
+function updateStickyBar(){
+  const bar = document.getElementById('acc-bar');
+  if(!bar) return;
+
+  const stats = getAccountabilityState();
+  const {pct,streak,missed,done,skipped,started} = stats;
+
+  // Hide if done or before start
+  if(done||skipped||_diff<0){bar.classList.add('hidden');return;}
+  bar.classList.remove('hidden');
+
+  const fill = document.getElementById('ab-bar-fill');
+  const icon = document.getElementById('ab-status-icon');
+  const title = document.getElementById('ab-title');
+  const sub = document.getElementById('ab-sub');
+  const pctDisplay = document.getElementById('ab-pct-display');
+
+  if(fill) fill.style.width = pct+'%';
+  if(pctDisplay) pctDisplay.textContent = pct+'%';
+  if(pctDisplay) pctDisplay.style.color = pct>=85?'var(--earth)':pct>=40?'var(--fire)':'var(--t3)';
+
+  if(missed >= 2){
+    if(icon){icon.textContent='🔴';icon.className='ab-status fire';}
+    if(title) title.textContent = missed+' days missed — restart today, right now';
+    if(sub) sub.textContent = 'every day you delay costs you real pipeline';
+  } else if(missed === 1){
+    if(icon){icon.textContent='⚠️';icon.className='ab-status fire';}
+    if(title) title.textContent = 'Yesterday slipped — don\'t let today follow';
+    if(sub) sub.textContent = 'one skip is human · two is a pattern';
+  } else if(pct >= 85){
+    if(icon){icon.textContent='🏁';icon.className='ab-status pending';}
+    if(title) title.textContent = 'Almost done — one task left, close it';
+    if(sub) sub.textContent = (streak>0?'🔥 '+streak+' day streak · ':'')+'finish strong';
+  } else if(pct >= 50){
+    if(icon){icon.textContent='⚡';icon.className='ab-status pending';}
+    if(title) title.textContent = 'Past halfway — '+pct+'% done today';
+    if(sub) sub.textContent = 'most people stop here. you don\'t.';
+  } else if(pct > 0){
+    if(icon){icon.textContent='🔥';icon.className='ab-status pending';}
+    if(title) title.textContent = 'Day started ('+pct+'%) — keep the momentum';
+    if(sub) sub.textContent = 'don\'t let a warm start go cold';
+  } else {
+    if(icon){icon.textContent='⚡';icon.className='ab-status pending';}
+    if(title) title.textContent = 'Day '+d60+' hasn\'t started — 25 LinkedIn requests, go';
+    if(sub) sub.textContent = (streak>0?'🔥 '+streak+' day streak at risk · ':'')+'open war room';
+  }
+}
+
+// Override updateDailyProgress to also update sticky bar — done by adding call in original fn above
+
+// Hide sticky bar when on war room tab, show on others
+function switchTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('view-'+name).classList.add('active');
+  // Toggle sticky bar
+  const bar = document.getElementById('acc-bar');
+  if(bar){
+    if(name==='warroom') bar.classList.add('hidden');
+    else updateStickyBar();
+  }
+}
+
+// Body padding for sticky bar
+document.body.style.paddingBottom='80px';
+
+// Init modal + bar after a short delay so page renders first
+setTimeout(()=>{
+  buildStickyBar();
+  showAccountabilityModal();
+},600);
+
+
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/sw.js').catch(()=>{});
 }

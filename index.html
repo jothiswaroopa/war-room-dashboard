@@ -2938,13 +2938,13 @@ const SL={prospect:'prospect',call:'call booked',closed:'closed ✓',lost:'lost'
 const SS={prospect:'s-p',call:'s-c',closed:'s-x',lost:'s-l'};
 const TAG={dom:'<span class="ttag td">🇮🇳 dom</span>',intl:'<span class="ttag ti">🌍 intl</span>',agent:'<span class="ttag tag">🤖 agent</span>',brand:'<span class="ttag tb">🎬 brand</span>'};
 
-let st=JSON.parse(localStorage.getItem('empire_v1')||'null')||{
+let st=JSON.parse(localStorage.getItem('empire_v3')||'null')||{
   checked:{},clients:[],daily:{},
   funnel:{out:0,conv:0,call:0,close:0},
   today:{date:'',li:0,uw:0,ce:0,dm:0},
   streams:{},agents:{},brand:{},tools:{}
 };
-function save(){localStorage.setItem('empire_v1',JSON.stringify(st))}
+function save(){localStorage.setItem('empire_v3',JSON.stringify(st))}
 
 // Days + Month — using local date comparison (IST-safe)
 const NOW=new Date();
@@ -3686,15 +3686,16 @@ checkDayReset();updateDailyProgress();
 
 function getMissedDays(){
   if(!st.history||!st.history.length) return 0;
-  // Count how many consecutive recent days were missed/skipped
   let missed=0;
   const today=new Date().toDateString();
-  const yesterday=new Date(Date.now()-86400000).toDateString();
-  // Walk back from yesterday
+  // Only count missed days ON or AFTER the plan start date
+  const planStart=new Date(2026,5,9); // June 9 2026 — day 1
   for(let i=1;i<=14;i++){
-    const d=new Date(Date.now()-i*86400000).toDateString();
-    const entry=st.history.find(h=>h.date===d);
+    const dDate=new Date(Date.now()-i*86400000);
+    const d=dDate.toDateString();
     if(d===today) continue;
+    if(dDate<planStart) break; // don't count days before the plan started
+    const entry=st.history.find(h=>h.date===d);
     if(!entry||entry.status==='missed'||entry.status==='skip') missed++;
     else break;
   }

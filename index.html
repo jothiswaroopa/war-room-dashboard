@@ -3857,16 +3857,21 @@ function dismissModal(e){
 function goToWarRoom(){
   const overlay = document.getElementById('acc-modal-overlay');
   if(overlay) overlay.remove();
-  // Switch to the war room tab
-  const warRoomBtn = document.querySelector('.tab[onclick*="warroom"]') ||
-    Array.from(document.querySelectorAll('.tab')).find(t => t.textContent.toLowerCase().includes('war'));
-  if(warRoomBtn) warRoomBtn.click();
-  else {
+  // Switch to the Command tab — this IS the war room
+  const cmdBtn = document.querySelector('.tab[onclick*="cmd"]');
+  if(cmdBtn){
+    cmdBtn.click();
+  } else {
+    // fallback: manually activate cmd tab
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    const warView=document.getElementById('view-warroom');
-    if(warView){warView.classList.add('active');}
+    const cmdView = document.getElementById('view-cmd');
+    if(cmdView) cmdView.classList.add('active');
+    const firstTab = document.querySelector('.tab');
+    if(firstTab) firstTab.classList.add('active');
   }
+  // Scroll to top
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 // ── STICKY ACCOUNTABILITY BAR ──
